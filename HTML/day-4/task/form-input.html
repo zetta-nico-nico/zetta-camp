@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input</title>
+    <style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index-day-4.html">
+        <p>Go to Biography Page</p>
+    </a>
+
+    <a href="shopping-list.html">
+        <p>Go to Shopping List Page</p>
+    </a>
+    <h1 style="text-align:left">Form Input</h1>
+    <form method="get" onsubmit="alert('Form is being submitted')">
+        <label for="firstNameInput">First Name</label><br>
+        <input type="text" id="firstNameInput" placeholder="First Name" name="firstNameInput">
+        <br>
+        <br>
+        <label for="lastNameInput">Last Name</label>
+        <br>
+        <input type="text" id="lastNameInput" placeholder="Last Name" name="lastNameInput">
+        <br>
+        <br>
+        <label for="biographyInput">Biography</label>
+        <br>
+        <textarea id="biographyInput" cols="30" rows="10" placeholder="Insert your biography here"
+            name="biographyInput"></textarea>
+        <br>
+        <br>
+
+        <label>Gender</label>
+        <br>
+
+        <input type="radio" id="genderMale" name="genderMaleInput">
+        <label for="genderMale">Male</label>
+        <br>
+
+        <input type="radio" id="genderFemale " name="genderFemaleInput">
+        <label for="genderFemale">Female</label>
+        <br>
+
+        <br>
+        <label for="emailInput">Email</label>
+        <br>
+        <input type="email" id="emailInput" name="emailInput" placeholder="Email address">
+        <br>
+
+        <br>
+        <label for="phoneInput">Phone</label>
+        <br>
+        <input type="tel" id="phoneInput" name="phoneInput" placeholder="Phone Number">
+        <br>
+
+        <br>
+        <label for=" ageInput">Age</label>
+        <br>
+        <input type="number" id="ageInput" placeholder="Age" min="1">
+        <br>
+
+        <br>
+        <label for=" urlInput">Social Media URL</label>
+        <br>
+        <input type="url" id="urlInput" name="urlInput" placeholder="URL">
+        <br>
+
+        <br>
+        <label for="timeInput">Select a time:</label>
+        <br>
+        <input type="time" id="timeInput" name="timeInput">
+        <br>
+
+
+        <br>
+        <input type="submit">
+
+
+
+    </form>
+
+</body>
+
+</html>
+
+
+<!-- Create a form for inputting users. It has to have :
+Text Input like first name, last name.
+Textarea like biography
+Radio button for Civility or Gender
+Email input
+Telephone input
+Number input for age
+Url for their website or social media
+OPTIONAL : Add more input into the form -->
