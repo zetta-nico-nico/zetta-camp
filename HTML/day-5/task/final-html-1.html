@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Final - Item</title>
+</head>
+
+<body>
+
+    <!-- header -->
+    <header>
+        <h2>HTML Final - Item Input and Item Display</h2>
+
+        <!-- navigation -->
+        <!-- to page item list  -->
+        <nav>
+            <a href="final-html-2.html">Go to HTML Final - Item List Page</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- section A - item input -->
+        <!-- form item input -->
+        <section id="section-a">
+            <h2 style="text-align:center">Please Input Data Below</h2>
+            <form action="#section-b" method="get">
+                <table style="margin-left: auto; margin-right: auto">
+                    <tbody>
+
+                        <!-- input name -->
+                        <tr>
+                            <th><label for="nameInput">Name</label></th>
+                            <td><input type="text" name="nameInput" id="nameInput" size="40"></td>
+                        </tr>
+                        <!-- input username -->
+                        <tr>
+                            <th><label for="usernameInput">Username</label></th>
+                            <td><input type="text" name="usernameInput" id="usernameInput" size="40"></td>
+                        </tr>
+                        <!-- input password -->
+                        <tr>
+                            <th><label for="passwordInput">Password</label></th>
+                            <td><input type="password" name="passwordInput" id="passwordInput" size="40"></td>
+                        </tr>
+                        <!-- input date -->
+                        <tr>
+                            <th><label for="dateInput">Date of Birth</label></th>
+                            <td><input type="date" name="dateInput" id="dateInput" size="40"></td>
+                        </tr>
+                        <!-- input telephone -->
+                        <tr>
+                            <th><label for="telephoneInput">Telephone</label></th>
+                            <td><input type="tel" name="telephoneInput" id="telephoneInput" pattern="[0-9]{12}"
+                                    size="40">
+                            </td>
+                        </tr>
+                        <!-- input image -->
+                        <tr>
+                            <th><label for="imageInput">Image</label></th>
+                            <td><input type="file" accept="image/*" alt="imageInput" value="name"></td>
+                        </tr>
+                        <!-- input gender with radio -->
+                        <tr>
+                            <th rowspan="2">Gender</th>
+                            <!-- male radio -->
+                            <td>
+                                <input type="radio" name="radioInputMale" id="radioInputMale" value="male">
+                                <label for="radioInputMale">Male</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!-- female radio -->
+                            <td>
+                                <input type="radio" name="radioInputFemale" id="radioInputFemale" value="female">
+                                <label for="radioInputFemale">Female</label>
+                            </td>
+                        </tr>
+                        <!-- input user agreement checkbox -->
+                        <tr>
+                            <th>Agreement</th>
+                            <td>
+                                <input type="checkbox" name="checkboxInput" id="checkboxInput" value="yes">
+                                <label for="usernameInput">I Agree with Terms and Condition</label>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <div style="  display: flex; justify-content: center; align-items: center;">
+                    <button type="submit">Save</button>
+                </div>
+
+            </form>
+        </section>
+
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+        <!-- section B - item display -->
+        <!-- form item input -->
+        <section id="section-b">
+            <h2 style="text-align:center">Result Data</h2>
+            <table style="margin-left: auto; margin-right: auto">
+                <tbody>
+                    <form>
+                        <!-- input name -->
+                        <tr>
+                            <th><label for="nameInput">Name</label></th>
+                            <td><input type="text" name="nameInput" id="nameInput" size="40" value="Nico" disabled></td>
+                        </tr>
+                        <!-- input username -->
+                        <tr>
+                            <th><label for="usernameInput">Username</label></th>
+                            <td><input type="text" name="usernameInput" id="usernameInput" size="40" value="nico.nico"
+                                    disabled></td>
+                        </tr>
+                        <!-- input password -->
+                        <tr>
+                            <th><label for="passwordInput">Password</label></th>
+                            <td><input type="text" name="passwordInput" id="passwordInput" size="40" value="niconico"
+                                    disabled></td>
+                        </tr>
+                        <!-- input date -->
+                        <tr>
+                            <th><label for="dateInput">Date of Birth</label></th>
+                            <td><input type="date" name="dateInput" id="dateInput" size="40" value="1998-03-10"
+                                    disabled></td>
+                        </tr>
+                        <!-- input telephone -->
+                        <tr>
+                            <th><label for="telephoneInput">Telephone</label></th>
+                            <td><input type="tel" name="telephoneInput" id="telephoneInput" pattern="[0-9]{12}"
+                                    size="40" value="087715186958" disabled></td>
+                        </tr>
+                        <!-- input image -->
+                        <tr>
+                            <th><label for="imageInput">Image</label></th>
+                            <td><img src="assets/images/foto_web.jpg" width="100"></td>
+                        </tr>
+                        <!-- input gender with radio -->
+                        <tr>
+                            <th rowspan="2">Gender</th>
+                            <!-- male radio -->
+                            <td>
+                                <input type="radio" name="radioInputMale" id="radioInputMale" checked disabled>
+                                <label for="radioInputMale">Male</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!-- female radio -->
+                            <td>
+                                <input type="radio" name="radioInputFemale" id="radioInputFemale" disabled>
+                                <label for="radioInputFemale">Female</label>
+                            </td>
+                        </tr>
+                        <!-- input user agreement checkbox -->
+                        <tr>
+                            <th>Agreement</th>
+                            <td>
+                                <input type="checkbox" name="agreementInput" id="agreementInput" checked disabled>
+                                <label for="agreementInput">I Agree with Terms and Condition</label>
+                            </td>
+                        </tr>
+                    </form>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <br><br>
+    <footer>
+        <h3 style="text-align:center;">Credit By : Nico</h3>
+    </footer>
+</body>
+
+</html>
+
+
+<!-- Page 1 : Item 
+Section A : Item Input
+Is a Form, should at least have a total of 8 input with at least 4 different input types.
+Should have image upload
+Have submit button to display the section B
+Section B : Item Display
+Display the Item in a section, with image and all the data inputted in the form above. -->
