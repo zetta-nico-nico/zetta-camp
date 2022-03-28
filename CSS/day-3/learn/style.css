@@ -1,0 +1,132 @@
+* {
+  box-sizing: border-box;
+}
+
+/* using id */
+#product-overview {
+  background: red;
+
+  /* can use pixel value */
+  width: 100%;
+  height: 528px;
+  padding: 10px;
+
+  /* to set width and height base on content */
+  /* box-sizing: border-box; */
+}
+
+/* set global */
+/* using * */
+/* change one element */
+/* * {
+  font-family: sans-serif;
+} */
+
+/* inheritance */
+body {
+  font-family: "Montserrat", sans-serif;
+  color: black;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* inside the element product-overview */
+#product-overview h1 {
+  color: white;
+  font-family: "Anton", sans-serif;
+}
+
+/* using class */
+.section-title {
+  color: green;
+}
+
+.main-header {
+  width: 100%;
+  color: black;
+  background: rgb(134, 230, 134);
+  padding: 8px 16px;
+}
+
+.main-header > div {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.main-header__brand {
+  color: #17e74f;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.main-nav__item {
+  display: inline-block;
+  margin: 0 16px;
+}
+
+.main-nav__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+a {
+  color: black;
+}
+
+.main-nav {
+  display: inline-block;
+  text-align: right;
+  width: calc(100% - 70px);
+  vertical-align: middle;
+}
+
+.main-nav__item a {
+  text-decoration: none;
+  color: #0e4f1f;
+}
+
+.main-nav__item a::after {
+  content: " (link)";
+  color: red;
+}
+
+.main-nav__item a::before {
+  text-decoration: none;
+  color: #0e4f1f;
+}
+
+.main-nav__item a:hover,
+.main-nav__item a:active {
+  color: white;
+}
+
+/* .main-nav__item a:active {
+  color: white;
+} */
+
+/* p::first-letter{
+  color: red;
+  font-size: 20px;
+} */
+
+/* box model */
+
+/* combinator */
+/* combine multiple selector */
+
+/* different combinator */
+/* 1. Adjacent example => h2 + p */
+/* if p below h2 then will apply the style */
+/* second element following the first element */
+
+/* 2. General sibling example => h2 ~ p */
+/* similar to Adjacent but doesnt need to come direcly from first element */
+
+/* 3. Child example => div > p */
+/* if p inside the div then will apply the style */
+/* but if in div there are p inside another tag then style doesnt apply */
+
+/* 4. Descendant example => div p */
+/* p wil apply the style whenever p inside the div */
+/* if p inside tag in div then p still apply the style */

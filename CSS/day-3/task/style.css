@@ -1,0 +1,102 @@
+header > h1 {
+  text-align: center;
+}
+
+.column {
+  flex: 100%;
+  height: 700px;
+  padding: 10px;
+  margin: 5px;
+  background-color: #afa9a9;
+  text-align: center;
+}
+
+h2 + p{
+    font-size:20px
+}
+
+.column > p {
+  text-align: justify;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.column h2::first-letter {
+  font-size: 60px;
+  margin-right: 10px;
+}
+
+.column img {
+  float: center;
+  width: 300px;
+}
+
+.first-card {
+  margin-top: 0;
+}
+
+.second-card {
+  margin: 1rem 0;
+}
+
+.third-card {
+  margin-bottom: 0;
+}
+
+.nav-item__lists {
+  display: inline-block;
+  margin: 0 16px;
+}
+.nav-item {
+  text-align: right;
+  display: inline-block;
+  width: calc(100% - 10px);
+  /* vertical-align: middle; */
+}
+
+.nav-item__lists a {
+  text-decoration: none;
+}
+
+.nav-item__lists {
+  list-style: none;
+}
+
+.nav-item__lists a:hover,
+.nav-item__lists a:active {
+  color: black;
+}
+
+.button {
+  display: block;
+  width: 100px;
+  height: 30px;
+  background: #1708f0;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  line-height: 25px;
+}
+
+footer{
+    margin: 0;
+}
+
+/* Implement 9 cards which contain data of a popular item(smartphone, laptop, etc) . 3 x 3 with each row has 3 cards. With these conditions : 
+1. Text Header : “Popular Products”
+2. 3 cards on the first row should have zero margin with the top element(which should be title) 
+of the page.
+3. 3 cards on the second row should have 1 rem space between the first and last row.
+4. 3 cards on the third row should have zero margin with the bottom 
+element(which should be footer) of the page.
+5. Implement Pseudo-class and Pseudo-element anywhere on the page, 
+does not need to be exactly on the card.
+6. In the footer, should have links to other pages like about, 
+and contacts.(These 2 pages should only have text, 
+but create the file to route them from Popular Products Page)
+ and style the link anchor into looking like a button.  */
