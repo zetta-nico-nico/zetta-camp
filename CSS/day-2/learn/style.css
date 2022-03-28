@@ -1,0 +1,52 @@
+/* using id */
+#product-overview {
+  background: red;
+}
+
+/* set global */
+/* using * */
+/* change one element */
+/* * {
+  font-family: sans-serif;
+} */
+
+/* inheritance */
+body {
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+}
+
+/* inside the element product-overview */
+#product-overview h1 {
+  color: white;
+  font-family: "Anton", sans-serif;
+  padding: 20px;
+  border: 5px black solid;
+  margin: 20px;
+}
+
+/* using class */
+.section-title {
+  color: green;
+}
+
+/* box model */
+
+/* combinator */
+/* combine multiple selector */
+
+/* different combinator */
+/* 1. Adjacent example => h2 + p */
+/* if p below h2 then will apply the style */
+/* second element following the first element */
+
+/* 2. General sibling example => h2 ~ p */
+/* similar to Adjacent but doesnt need to come direcly from first element */
+
+/* 3. Child example => div > p */
+/* if p inside the div then will apply the style */
+/* but if in div there are p inside another tag then style doesnt apply */
+
+/* 4. Descendant example => div p */
+/* p wil apply the style whenever p inside the div */
+/* if p inside tag in div then p still apply the style */

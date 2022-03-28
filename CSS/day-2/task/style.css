@@ -1,0 +1,75 @@
+/* default color */
+* {
+  background-color: rgba(215, 233, 215, 0.555);
+  color: #4141ac;
+  font-family: "Open Sans", sans-serif;
+  text-align: justify;
+}
+
+/* make h1 in header tag in center */
+header h1 {
+  text-align: center;
+  background-color: rgb(211, 247, 10);
+  font-family: "Open Sans", sans-serif;
+}
+
+.section-card hr {
+  margin-top: 50px;
+}
+
+/* make cards */
+.section-card {
+  background-color: rgb(255, 255, 255);
+  text-align: left;
+  margin: 20px;
+  border: 1px solid black;
+  padding: 1px;
+}
+
+.section-paragraph {
+  margin: 20px 5px;
+  text-align: justify;
+  background-color: rgb(255, 255, 255);
+}
+
+.section-paragraph > p {
+  text-align: justify;
+  background-color: rgb(255, 255, 255);
+}
+
+.section-paragraph h2 {
+  text-align: center;
+  background-color: rgb(255, 255, 255);
+}
+
+.section-card img {
+  background-color: #ffffff;
+  display: block;
+  margin: 20px auto;
+  width: 30%;
+}
+
+.section-card h2 {
+  text-align: center;
+  background-color: #ffffff;
+  margin-bottom: -40px;
+  font-family: "Anton", sans-serif;
+}
+
+.section-card p {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+}
+
+/* .section-card hr {
+} */
+
+/* section */
+
+/* Create HTML + CSS Project. With :
+Title and Paragraph above the cards
+Below the Paragraph, add 4 cards, in the same line.
+Inside each card, there will be picture, title of the card, and paragraph of the card
+Styling the parents with * to change the default color of the text and font
+Styling the title of the card using Combinators
+Styling the margin, border, and padding of the card using CSS Shorthand.  */
