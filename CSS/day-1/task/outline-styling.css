@@ -1,0 +1,21 @@
+h1,
+h2 {
+  text-align: center;
+}
+
+p {
+  text-align: justify;
+}
+
+span {
+  color: #fc0f03;
+  font-weight: bold;
+}
+
+.span-one {
+  font-size: xx-large;
+}
+
+.span-two {
+  font-size: x-large;
+}

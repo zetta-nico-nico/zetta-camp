@@ -1,0 +1,15 @@
+/* using id */
+#product-overview {
+  background: red;
+}
+
+/* change one element */
+/* h1 {
+  color: white;
+  font-family: "Anton", sans-serif;
+} */
+
+/* using class */
+.section-title {
+  color: green;
+}

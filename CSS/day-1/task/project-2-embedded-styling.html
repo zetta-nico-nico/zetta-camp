@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Day 2 - Embedded Styling</title>
+    <!-- The First row of the First Table has Green Background,
+    the second row of Second table has Red background,
+    and the third row of Third table has a blue background. -->
+    <style>
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        table,
+        th,
+        td {
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid black;
+        }
+
+        .row-green {
+            background-color: #20e85f;
+        }
+
+        .row-red {
+            background-color: #fc0f03;
+        }
+
+        .row-blue {
+            background-color: #033dfc;
+            color: #ffffff;
+        }
+
+        a {
+            color: #28fc03;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <!-- make h1 center -->
+        <h1>Multiple Tables</h1>
+        <nav>
+            <ul>
+                <li><a href="project-1-inline-styling.html">Go to Inline Styling Page</a></li>
+                <li><a href="project-3-external-styling.html">Go to Outline Styling Page</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- table 1 - Hobby -->
+        <h2>List of My Hobby</h2>
+        <section class="section-hobby">
+            <table>
+                <thead>
+                    <tr>
+                        <th>List of Hobby</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="row-green">
+                        <td>Basketball</td>
+                        <td>Playing as Power Forward in High School and College. Already selected for University Team
+                            Basketball</td>
+                    </tr>
+                    <tr>
+                        <td>Playing Games</td>
+                        <td>List of games played :
+                            <ol>
+                                <li>FIFA 22</li>
+                                <li>NBA 2K22</li>
+                                <li>Rainbow Six: Siege</li>
+                                <li>Monster Hunter World</li>
+                            </ol>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- table 2 - Favorite Movies -->
+        <h2>Favorite Movies</h2>
+        <section class="section-hobby">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Movies Name</th>
+                        <th>Release Date</th>
+                        <th>Poster</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Johnny English Reborn</td>
+                        <td>July 25, 2010</td>
+                        <td><img src="https://m.media-amazon.com/images/M/MV5BMjEzODY2MjU1Nl5BMl5BanBnXkFtZTcwMzc1ODUzNg@@._V1_.jpg"
+                                height="450"></td>
+                    </tr>
+                    <tr class="row-red">
+                        <td>Sherlock Holmes</td>
+                        <td>October 7, 2011</td>
+                        <td><img src="https://resizing.flixster.com/ci1vGVE67x8KhlosPKRb8mi10xY=/300x300/v2/https://flxt.tmsimg.com/assets/p8204516_b_h9_ao.jpg"
+                                height="300"></td>
+                    </tr>
+                    <tr>
+                        <td>Bruce Almighty</td>
+                        <td>May 23, 2003</td>
+                        <td><img src="https://upload.wikimedia.org/wikipedia/en/6/60/BruceAlmighty_poster.jpg"
+                                height="450"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- table 3 - Favorites Song -->
+        <h2>List of Favorite Song</h2>
+        <section class="section-song">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Artist</th>
+                        <th>Video Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Just Awake</td>
+                        <td>Fear, and Loathing in Las Vegas</td>
+                        <td><a href="https://www.youtube.com/watch?v=mP0Ej28JeCs">Link</a></td>
+                    </tr>
+                    <tr>
+                        <td>Let Me Hear</td>
+                        <td>Fear, and Loathing in Las Vegas</td>
+                        <td><a href="https://www.youtube.com/watch?v=D-SQqppuGvc">Link</a></td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td>Through the Fire and Flames</td>
+                        <td>Dragonforce</td>
+                        <td><a href="https://www.youtube.com/watch?v=0jgrCKhxE1s">Link</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+
+</html>
+
+
+<!-- Create UI for Multiple Tables. 
+    Table Hobby, Table Favorites Movies, And Table Favorites Song. 
+    The First row of the First Table has Green Background, 
+    the second row of Second table has Red background, 
+    and the third row of Third table has a blue background. -->
