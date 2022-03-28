@@ -1,0 +1,81 @@
+.row {
+  display: flex;
+}
+
+header h1 {
+  text-align: center;
+}
+
+h2,p {
+  font-size: 40px;
+}
+
+.container {
+  border: 5px solid black;
+  width: 1000px;
+  height: 100px;
+  margin: 0 20px;
+
+  overflow: auto;
+}
+
+.container ul {
+  list-style-type: none;
+}
+
+li {
+  font-size: 30px;
+}
+.footer {
+  padding: 100px;
+}
+
+.nav-item__lists {
+  display: inline-block;
+  margin: 0 16px;
+}
+.nav-item {
+  text-align: right;
+  display: inline-block;
+  width: calc(100% - 10px);
+  /* vertical-align: middle; */
+}
+
+.nav-item__lists a {
+  text-decoration: none;
+}
+
+.nav-item__lists {
+  list-style: none;
+}
+
+.nav-item__lists a:hover,
+.nav-item__lists a:active {
+  color: black;
+}
+
+.button {
+  display: block;
+  width: 200px;
+  height: 30px;
+  background: #1708f0;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  line-height: 25px;
+}
+
+/* 
+      1. Continue with the previous 9 cards “Popular Products”. 
+      Separate Styling into separate classes and combine them with multiple css classes. 
+      For example, Create class mb-1 for margin-bottom 1 rem, pt-1 for padding-top 1 rem, etc. 
+      Then combine them together to style an element.
+      2. Add 9 more cards, you can simply duplicate them. 
+      This time make the Text Header stick when the user scrolling down.
+      3. Create another page with 2 containers that has a list of items(use unordered list) 
+      in storage and a list of items sold. They are in different containers. 
+      Each of these containers is scrollable on their own. 
+      So when you scroll on a list of items in storage, 
+      it should not affect the list of items sold and vice versa. --> */
