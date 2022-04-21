@@ -1,0 +1,130 @@
+// MongoDB Playground
+// Use Ctrl+Space inside a snippet or a string literal to trigger completions.
+
+// const database = 'profile';
+// const collection = 'coll_profile';
+
+// Create a new database.
+use('zettacamp');
+
+// Create a new collection.
+// db.createCollection(collection);
+
+// The prototype form to create a regular collection:
+/* db.createCollection( <name>,
+  {
+    capped: <boolean>,
+    autoIndexId: <boolean>,
+    size: <number>,
+    max: <number>,
+    storageEngine: <document>,
+    validator: <document>,
+    validationLevel: <string>,
+    validationAction: <string>,
+    indexOptionDefaults: <document>,
+    viewOn: <string>,
+    pipeline: <pipeline>,
+    collation: <document>,
+    writeConcern: <document>
+  }
+) */
+
+// The prototype form to create a time-series collection:
+/* db.createCollection( <name>,
+  {
+    timeseries: {
+      timeField: <string>,
+      metaField: <string>,
+      granularity: <string>
+    },
+    expireAfterSeconds: <number>
+  }
+) */
+
+// database.coll_profile.find().pretty();
+
+// insert data using insertMany
+// db.profile.insertMany([{
+//    name: "Nico",
+//    birthDate: "October 3, 1998",
+//    hobby: [
+//       'Games', 'Sport'
+//    ]
+// },
+// {
+//    name: "Nico Nico",
+//    birthDate: "October 4, 1997",
+//    hobby: [
+//       "Basketball", "Volleyball"
+//    ]
+// }]);
+
+
+// read data base on ID
+db.profile.find({"_id": ObjectId("6255409f7be2d1e3603cc205")}).pretty();
+
+// update one data base on ID
+// db.profile.updateOne({
+// "_id" : ObjectId("6254fffaa0ac8a00aac26fc4")
+// },
+// {
+// $push: {
+//     "hobby": "Swimming"
+// }
+// });
+
+// update one data base on ID
+// db.profile.updateOne({
+// db.profile.updateOne(
+//    { _id : ObjectId("62551a17c600d81c495b29c4")},
+//    { $push: { hobby: { $each: [ "Swimming", "Surfing" ] } } }
+// )
+
+// update all
+// db.profile.updateMany({},{$set: {bookFavorite: "Sherlock Holmes"}})
+
+// update book name
+// db.profile.updateOne({}, {$set: {bookFavorite: "Hyouka"}})
+// db.profile.updateOne({}, {$unset: {bookName: 1}})
+
+// update all profile favorite book
+// db.profile.updateMany({}, {$set: {bookFavorite: "Hyouka"}})
+
+// update something based on bookFavorite
+// db.profile.updateMany({bookFavorite: "Hyouka"}, {$set: {hobby: "Read book"}})
+
+// add key scores
+// db.profile.updateOne(
+//    { _id : ObjectId("62551a17c600d81c495b29c4")},
+//    { $push: { scores: { $each: [ 1,2,3,4,5 ] } } }
+// )
+
+
+// remove 1 value
+// db.profile.updateOne({
+//   _id : ObjectId("62551a17c600d81c495b29c4")
+// },
+// {
+//   $pull: {scores: 1}
+// })
+
+// remove key
+// db.profile.updateOne(
+//   { _id : ObjectId("62551a17c600d81c495b29c4")},
+//   {
+//   $unset: {
+//     scores: 1
+//   }}
+// )
+
+
+// delete data
+// db.profile.deleteOne({
+//   _id: ObjectId("62551a17c600d81c495b29c5")
+// })
+
+// delete all data
+// db.profile.deleteMany({})
+
+// output data
+db.profile.find().pretty();
