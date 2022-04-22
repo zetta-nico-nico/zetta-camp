@@ -125,6 +125,7 @@ router.get('/concat-book', async (req, res) => {
             }, {
                 $project: {
                     book_shelf_name: 1,
+                    book_name: 1,
                     book_available: {
                         $concat: [
                             "Book Name = ", "$book_name", " with stock available : ", "$book_stock_string"
