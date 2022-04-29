@@ -4,9 +4,6 @@ const express = require('express');
 // import mongoose 
 const mongoose = require('mongoose');
 
-// import express Router
-const router = express.Router();
-
 // make schema 
 const Schema = mongoose.Schema;
 

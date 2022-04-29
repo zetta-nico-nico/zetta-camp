@@ -1,7 +1,4 @@
 // import express
-const {
-    Router
-} = require('express');
 const express = require('express');
 
 // import mongoose 
@@ -17,10 +14,18 @@ module.exports = router;
 
 // make pagination
 // using facet and group
-router.get('/pagination-book-name', async (req, res) => {
+router.get('/pagination-book-name/:page', async (req, res) => {
     // lookup to get book data
     // group data by book name and count the total stock by each book
     // use facet to get each page contain 1 book with book name and book stock
+
+    // destruct params
+    const {
+        page
+    } = req.params;
+
+    let limit = 2;
+
     try {
         const result = await BookShelf.aggregate([{
                 $lookup: {
@@ -45,67 +50,89 @@ router.get('/pagination-book-name', async (req, res) => {
                     total_stock: {
                         $sum: '$book_stock'
                     }
+                },
+            },
+            {
+                $sort: {
+                    _id: 1
                 }
             }, {
                 $facet: {
-                    "Page 1": [{
-                        $project: {
-                            book_name: 1,
-                            total_stock: 1
-                        }
-                    }, {
-                        $limit: 1
-                    }],
-                    "Page 2": [{
+                    "Page": [{
                             $project: {
                                 book_name: 1,
                                 total_stock: 1
                             }
                         },
                         {
-                            $skip: 1
-                        }, {
-                            $limit: 1
-                        }
-                    ],
-                    "Page 3": [{
-                            $project: {
-                                book_name: 1,
-                                total_stock: 1
-                            }
+                            $skip: (+page * limit)
                         },
                         {
-                            $skip: 2
-                        }, {
-                            $limit: 1
-                        }
-                    ],
-                    "Page 4": [{
-                            $project: {
-                                book_name: 1,
-                                total_stock: 1
-                            }
-                        },
-                        {
-                            $skip: 3
-                        }, {
-                            $limit: 1
-                        }
-                    ],
-                    "Page 5": [{
-                            $project: {
-                                book_name: 1,
-                                total_stock: 1
-                            }
-                        },
-                        {
-                            $skip: 4
-                        }, {
-                            $limit: 1
+                            $limit: limit
                         }
                     ]
-                },
+                }
             }
+            // , {
+            //     $facet: {
+            //         "Page 1": [{
+            //             $project: {
+            //                 book_name: 1,
+            //                 total_stock: 1
+            //             }
+            //         }, {
+            //             $limit: 1
+            //         }],
+            //         "Page 2": [{
+            //                 $project: {
+            //                     book_name: 1,
+            //                     total_stock: 1
+            //                 }
+            //             },
+            //             {
+            //                 $skip: 1
+            //             }, {
+            //                 $limit: 1
+            //             }
+            //         ],
+            //         "Page 3": [{
+            //                 $project: {
+            //                     book_name: 1,
+            //                     total_stock: 1
+            //                 }
+            //             },
+            //             {
+            //                 $skip: 2
+            //             }, {
+            //                 $limit: 1
+            //             }
+            //         ],
+            //         "Page 4": [{
+            //                 $project: {
+            //                     book_name: 1,
+            //                     total_stock: 1
+            //                 }
+            //             },
+            //             {
+            //                 $skip: 3
+            //             }, {
+            //                 $limit: 1
+            //             }
+            //         ],
+            //         "Page 5": [{
+            //                 $project: {
+            //                     book_name: 1,
+            //                     total_stock: 1
+            //                 }
+            //             },
+            //             {
+            //                 $skip: 4
+            //             }, {
+            //                 $limit: 1
+            //             }
+            //         ]
+            //     },
+            // }
         ]);
         res.send(result);
     } catch (err) {

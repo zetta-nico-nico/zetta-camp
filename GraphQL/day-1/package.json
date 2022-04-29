@@ -1,0 +1,19 @@
+{
+  "name": "zetta-camp-graphql-day-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zetta-camp-nico",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^3.6.7",
+    "apollo-server-express": "^3.6.7",
+    "express": "^4.17.3",
+    "graphql": "^16.3.0",
+    "mongoose": "^6.3.1",
+    "nodemon": "^2.0.15"
+  }
+}

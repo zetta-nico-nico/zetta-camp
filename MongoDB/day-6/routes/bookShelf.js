@@ -1,7 +1,4 @@
 // import express
-const {
-    Router
-} = require('express');
 const express = require('express');
 
 // import mongoose 
