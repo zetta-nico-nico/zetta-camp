@@ -10,6 +10,14 @@ const {
     gql
 } = require('apollo-server-express');
 
+const {
+    applyMiddleware
+} = require('graphql-middleware');
+
+const {
+    makeExecutableSchema
+} = require('graphql-tools');
+
 // import bcrypt
 const bcrypt = require('bcrypt');
 
@@ -103,8 +111,20 @@ input UserInput{
     user_type: user_type_enum
 }
 
+input UserEditInput{
+    ID: String
+    name: String
+    password: String
+    user_type: user_type_enum
+}
+
 input UserSearchInput{
     user_id: ID
+}
+
+input Pagination{
+    skip: Int
+    limit: Int
 }
 
 input UserFilterInput{
@@ -121,6 +141,15 @@ input SongListInput{
     genre: String,
     duration: Int,
     created_by: ID
+}
+
+input SongListEditInput{
+    song_id: ID
+    name: String
+}
+
+input SongListDeleteInput{
+    song_id: ID
 }
 
 input SearchSongInput{
@@ -140,8 +169,12 @@ input SongListSortInput{
     creator_name: SortingList!
 }
 
+type LoginUser{
+    email: String
+    token: String
+}
 input LoginUserInput{
-    name: String!,
+    email: String!
     password: String!
 }
 
@@ -179,8 +212,12 @@ input PlaylistSortInput{
 
 
 type Mutation{
+    loginUser(user_input: LoginUserInput): LoginUser
     insertUser(user_input: UserInput) : Users
+    editUser(user_input: UserEditInput): Users
     insertSongList(songlist_input: SongListInput) : SongLists
+    updateSong(songlist_input: SongListEditInput) : SongLists
+    deleteSong(songlist_input: SongListDeleteInput): SongLists
     insertPlaylist(playlist_input: PlaylistInput): Playlists
     insertSong(playlist_input: PlaylistSongInput): Playlists
     insertCollaborator(playlist_input: PlaylistCollaboratorInput) : Playlists
@@ -188,11 +225,11 @@ type Mutation{
     deleteCollaboratorPlaylist(playlist_input:PlaylistCollaboratorInput ): Playlists
 }
 type Query{
-    getAllUsers: [Users]
+    getAllUsers(user_input: Pagination): [Users]
     getAllUserFilter(user_input: UserFilterInput): [Users]
     getUserById(user_input: UserSearchInput) : Users
     getUserSort(user_input: UserSortingInput): [Users]
-    getAllSongs: [SongLists]
+    getAllSongs(songlist_input: Pagination): [SongLists]
     getSongById(songlist_input: SearchSongInput): SongLists
     getSongFilter(songlist_input: SongListFilterInput): [SongLists]
     getSongSort(songlist_input: SongListSortInput): [SongLists]
@@ -207,6 +244,51 @@ type Query{
 
 // ======================= Users =======================
 // ======================= Mutation =======================
+
+// login user to get token (id)
+const loginUser = async function (parent, {
+    user_input
+}) {
+    try {
+        // destruct user input
+        const {
+            email,
+            password
+        } = user_input;
+        // console.log(email, password);
+
+        // check if email is in database or not
+        const checkEmail = await UserModel.find({
+            email: email
+        });
+        if (Object.keys(checkEmail).length === 0) {
+            throw new Error('Email is not in database');
+        } else {
+
+            // check password
+            const hashed_password = checkEmail[0].hashed_password;
+            const checkPassword = await bcrypt.compare(password, hashed_password);
+
+            // make id to string
+            const token = checkEmail[0]._id.toString();
+            // console.log(token);
+            if (checkPassword) {
+                return {
+                    email: email,
+                    token: token
+                };
+            } else {
+                throw new Error(`Wrong Password`);
+            }
+        }
+        // return checkEmail;
+
+    } catch (err) {
+        throw new Error(`Error login ${err.message}`);
+    };
+};
+
+
 // insert data into database
 const insertUser = async function (parent, {
     user_input
@@ -240,14 +322,58 @@ const insertUser = async function (parent, {
 };
 
 // edit user data
+const editUser = async function (parent, {
+    user_input
+}) {
+    try {
+        // destruct user input
+        const {
+            ID,
+            name,
+            user_type,
+            password
+        } = user_input;
+        console.log(ID, name, user_type, password);
+
+        // define salt to hash password
+        const salt = await bcrypt.genSalt(10);
+        // generate salt to hash password
+        const newPassword = await bcrypt.hash(password, salt);
+
+        // search data base on token
+        const result = await UserModel.findByIdAndUpdate(ID, {
+            name: name,
+            user_type: user_type,
+            password: newPassword
+        }, {
+            new: true
+        });
+        return result;
+    } catch (err) {
+        throw new Error(`Error edit user : ${err.message}`);
+    }
+};
 
 
 // ======================= Query =======================
 // get all user data
-const getAllUsers = async function (parent) {
+const getAllUsers = async function (parent, {
+    user_input
+}) {
     try {
-        // get all data using find method
-        const result = await UserModel.find();
+        // destruct user input
+        const {
+            limit,
+            skip
+        } = user_input;
+
+        const result = await UserModel.aggregate([{
+                $skip: skip * limit
+            },
+            {
+                $limit: limit
+            }
+        ]);
         return result;
     } catch (err) {
         throw new Error(`Error getAllUser : ${err.message}`);
@@ -368,12 +494,78 @@ const insertSongList = async function (parent, {
     };
 };
 
+// update song
+const updateSong = async function (parent, {
+    songlist_input
+}) {
+    try {
+        // destruct song input
+        const {
+            song_id,
+            name
+        } = songlist_input;
+        // console.log(song_id, name);
+
+        // search data using findbyid method
+        const result = await SonglistsModel.findByIdAndUpdate(song_id, {
+            name: name
+        }, {
+            new: true
+        });
+        return result;
+    } catch (er) {
+        throw new Error(`Error updateSong : ${er.message}`);
+    };
+};
+
+
+// delete song
+const deleteSong = async function (parent, {
+    songlist_input
+}) {
+    try {
+        // destruct song list input 
+        const {
+            song_id
+        } = songlist_input;
+        // console.log(song_id);
+
+        // delete song
+        const result = await SonglistsModel.findByIdAndRemove(song_id, {
+            new: false
+        });
+        return result;
+    } catch (err) {
+        throw new Error(`Error deleting song : ${err.message}`);
+    }
+};
+
 // ======================= Query =======================
 // get all song list data
-const getAllSongs = async function (parent) {
+const getAllSongs = async function (parent, {
+    songlist_input
+}) {
     try {
+
+        // destruct song list input
+        const {
+            limit,
+            skip
+        } = songlist_input;
+
         // get all book lists data using find method
-        const result = await SonglistsModel.find();
+        const result = await SonglistsModel.aggregate([{
+            $skip: skip * limit
+        }, {
+            $limit: limit
+        }]);
+        //     const result = await UserModel.aggregate([{
+        //         $skip: skip * limit
+        //     },
+        //     {
+        //         $limit: limit
+        //     }
+        // ]);
         return result;
     } catch (err) {
         throw new Error(`Error getAllSongs : ${err.message}`);
@@ -411,11 +603,11 @@ const getSongFilter = async function (parent, {
         console.log(creator_name);
 
         // make all input data to regex
-        // make regex name
-        const regName = new RegExp(name, 'i');
+        // // make regex name
+        // const regName = new RegExp(name, 'i');
 
-        // make regex genre
-        const regGenre = new RegExp(genre, 'i');
+        // // make regex genre
+        // const regGenre = new RegExp(genre, 'i');
 
         // make regex creator name
         const regCreatorName = new RegExp(creator_name, 'i');
@@ -433,7 +625,11 @@ const getSongFilter = async function (parent, {
             $unwind: '$song_data'
         }, {
             $match: {
-                'song_data.name': creator_name
+                'song_data.name': {
+                    $regex: regCreatorName
+                },
+                name: name,
+                genre: genre
             }
         }]);
         console.log(result);
@@ -480,6 +676,7 @@ const getSongSort = async function (parent, {
                 $sort: {
                     name: sortName,
                     genre: sortGenre,
+                    'data.creator_name': sortCreatorName,
                 }
             }
         ]);
@@ -717,7 +914,7 @@ const getPlaylistFilter = async function (parent, {
             {
                 $lookup: {
                     from: 'users',
-                    localField: 'collaborator_ids',
+                    localField: 'created_by',
                     foreignField: '_id',
                     as: 'user_data'
                 }
@@ -727,13 +924,12 @@ const getPlaylistFilter = async function (parent, {
                     'playlist_name': {
                         $regex: regPlaylistName,
                     },
-                    // 'song_data.name': {
-                    //     regSongName
-                    // }
-                    // // ,
-                    // // 'user_data.name': {
-                    // //     regCreatorName
-                    // // }
+                    'song_data.name': {
+                        $regex: regSongName
+                    },
+                    'user_data.name': {
+                        $regex: regCreatorName
+                    }
                 }
             }
         ]);
@@ -768,30 +964,31 @@ const getPlaylistSort = async function (parent, {
         // sort data with playlist name and creator name
         const result = await PlaylistModel.aggregate([{
                 $lookup: {
-                    from: 'songlists',
-                    localField: 'song_ids',
+                    from: 'users',
+                    localField: 'created_by',
                     foreignField: '_id',
-                    as: 'song_data'
+                    as: 'user_data'
                 }
             },
             {
                 $sort: {
-                    playlist_name: sortPlaylistName
+                    playlist_name: sortPlaylistName,
+                    'user_data.name': sortCreatorName
                 }
             }
         ]);
-
-        console.log(result);
+        return result;
     } catch (err) {
         throw new Error(`Error getting sort playlist : ${err.message}`);
     }
 };
 
+// ======================= Loader =======================
 // loaders
 const getSonglistDataLoader = async function (parent, args, context) {
     if (parent.created_by) {
         // console.log(await context);
-        return await context.load(parent.created_by);
+        return await context.SongListLoader.load(parent.created_by);
 
         // return context.SongListLoader.
     }
@@ -813,6 +1010,297 @@ const getPlaylistSongLoader = async function (parent, args, context) {
     }
 };
 
+// get collaborator data playlist
+const getPlaylistCollaboratorLoader = async function (parent, args, context) {
+    // console.log(parent.collaborator_ids);
+    if (parent.collaborator_ids) {
+        return await context.PlaylistCollaboratorLoader.loadMany(parent.collaborator_ids);
+    }
+};
+
+// ======================= Authorization =======================
+// auth to add user
+// must use token
+// parameter name, email, password, user type
+const insertUserAuth = async function (resolver, parent, args, context) {
+    try {
+        // get token
+        let dataToken = context.req.get('Authorization');
+
+        console.log(args);
+        if (!dataToken) {
+            throw new Error('Token required');
+        };
+
+        let token = dataToken;
+        // check if token is in database
+        const checkToken = await UserModel.find({
+            _id: token
+        });
+        // console.log(checkToken);
+
+        // check if token is valid or not
+        if (!token || Object.keys(checkToken).length === 0) {
+            throw new Error('Token is invalid');
+        } else {
+            context.token = token;
+        }
+
+        // const user = getuserbytoken
+        // ctx.userId = user._id;
+
+        return resolver();
+    } catch (err) {
+        throw new Error(`Error insert auth : ${err.message}`);
+    }
+};
+
+
+// edit data auth
+const editUserAuth = async function (resolver, parent, {
+    user_input
+}, context) {
+    try {
+        // destruct data
+        const {
+            ID
+        } = user_input;
+
+        // get token
+        let dataToken = context.req.get('Authorization');
+        if (!dataToken) {
+            throw new Error('Token required');
+        } else {
+            // find data base on token if exist or not
+            const searchData = await UserModel.find({
+                _id: dataToken
+            });
+            // console.log(searchData);
+            // check if user is on database or not
+            if (!dataToken || Object.keys(searchData).length === 0) {
+                throw new Error('Token is invalid');
+            } else {
+                // context.token = token;
+                // console.log(`ok`);
+                // check if token is same with id to edit
+                // if(dataToken ===)
+                // console.log(ID, dataToken);
+                if (ID === dataToken) {
+                    context.token = dataToken;
+                } else {
+                    throw new Error(`You can't edit another user`);
+                }
+                // console.log(ID === dataToken);
+            }
+        }
+        return resolver();
+    } catch (err) {
+        throw new Error(`Error edit data auth : ${err.message}`);
+    }
+};
+
+// insert song auth
+const insertSongAuth = async function (resolver, parent, {
+    songlist_input
+}, context) {
+    try {
+        // destruct song list input
+        const {
+            created_by
+        } = songlist_input;
+        // console.log(created_by);
+        // get token
+        const dataToken = context.req.get('Authorization');
+        // console.log(dataToken);
+
+        if (!dataToken) {
+            throw new Error('Token required');
+        } else {
+            // check data if token is in database or not
+            const searchData = await UserModel.find({
+                _id: dataToken
+            });
+            // console.log(searchData);
+            // check if data is in database or not
+            if (!dataToken || Object.keys(searchData).length === 0) {
+                throw new Error('Token is invalid');
+            } else {
+                // check if token is administrator
+                // only administrator can add song
+                if (searchData[0].user_type === 'Administrator') {
+                    context.token = dataToken;
+                } else {
+                    throw new Error('You are not administrator');
+                }
+
+            };
+        };
+        return resolver();
+
+    } catch (err) {
+        throw new Error(`Error inserting song auth : ${err.message}`);
+    };
+};
+
+// auth update song
+const updateSongAuth = async function (resolver, parent, {
+    songlist_input
+}, context) {
+    try {
+        // destruct song list input
+        const {
+            song_id
+        } = songlist_input;
+        // console.log(created_by);
+        // get token
+        const dataToken = context.req.get('Authorization');
+        // console.log(dataToken);
+
+        if (!dataToken) {
+            throw new Error('Token required');
+        } else {
+            // check data if token is in database or not
+            const searchData = await UserModel.find({
+                _id: dataToken
+            });
+            // console.log(searchData);
+            // check if data is in database or not
+            if (!dataToken || Object.keys(searchData).length === 0) {
+                throw new Error('Token is invalid');
+            } else {
+                // check if token is the creator
+                const creatorId = mongoose.Types.ObjectId(dataToken);
+                console.log(creatorId);
+                const searchCreator = await SonglistsModel.find({
+                    _id: song_id,
+                    created_by: creatorId,
+                });
+                // console.log(searchCreator);
+
+                if (Object.keys(searchCreator).length === 0) {
+                    throw new Error('You are not the creator of music');
+                } else {
+                    context.token = dataToken;
+                };
+
+            };
+        };
+        return resolver();
+
+    } catch (err) {
+        throw new Error(`Error updating song auth : ${err.message}`);
+    };
+};
+
+
+// delete song data 
+const deleteSongAuth = async function (resolver, parent, {
+    songlist_input
+}, context) {
+    try {
+        // destruct songlist input
+        const {
+            song_id
+        } = songlist_input;
+
+        // console.log(song_id);
+        // get token
+        const dataToken = context.req.get('Authorization');
+
+        // check if token is empty or not
+        if (!dataToken) {
+            throw new Error(`Token required`);
+        } else {
+            // find token if in database or not
+            const searchUser = await UserModel.find({
+                _id: dataToken
+            });
+            // console.log(searchUser);
+            if (!dataToken || Object.keys(searchUser).length === 0) {
+                throw new Error('Token is invalid');
+            } else {
+                // search song with id from input and from token
+                // to check if user is deleting his own song
+                const searchSong = await SonglistsModel.find({
+                    _id: song_id,
+                    created_by: mongoose.Types.ObjectId(dataToken)
+                });
+                // console.log(searchSong);
+                if (Object.keys(searchSong).length === 0) {
+                    throw new Error(`You ca'nt delete another user song`);
+                } else {
+                    context.token = dataToken;
+                };
+            };
+        };
+
+        return resolver();
+    } catch (err) {
+        throw new Error(`Error deleting song auth : ${err.message}`);
+    };
+};
+
+
+// insert playlist auth
+const insertPlaylistAuth = async function (resolver, parent, {
+    playlist_input
+}, context) {
+    try {
+        // destruct playlist input
+        let {
+            created_by
+        } = playlist_input;
+
+        // get token
+        const dataToken = context.req.get('Authorization');
+        // console.log(dataToken);
+
+        // if token is not exists
+        if (!dataToken) {
+            throw new Error(`Token required`);
+        } else {
+            // search if token in database
+            const searchUser = await UserModel.find({
+                _id: dataToken
+            });
+            // console.log(searchUser);
+            if (Object.keys(searchUser).length === 0) {
+                throw new Error(`Token not valid`);
+            } else {
+                // check if user is creator or not
+                if (searchUser[0].user_type === 'Creator') {
+                    created_by = dataToken;
+                } else {
+                    throw new Error(`You are not creator`);
+                }
+            }
+        }
+    } catch (err) {
+        throw new Error(`Error inserting playlist auth : ${err.message}`);
+    }
+    return resolver();
+};
+
+// middleware
+let authMiddleware = {
+    Query: {
+        getAllUsers: insertUserAuth,
+        getAllSongs: insertUserAuth,
+        getSongById: insertUserAuth,
+        getAllPlaylist: insertUserAuth,
+        getPlaylistById: insertUserAuth
+    },
+    Mutation: {
+        insertUser: insertUserAuth,
+        editUser: editUserAuth,
+        insertSongList: insertSongAuth,
+        updateSong: updateSongAuth,
+        deleteSong: deleteSongAuth,
+        insertPlaylist: insertPlaylistAuth
+    }
+};
+
+
 // define all resolvers
 const resolvers = {
     Query: {
@@ -831,10 +1319,14 @@ const resolvers = {
 
     },
     Mutation: {
+        loginUser,
         insertUser,
+        editUser,
         insertSongList,
         insertPlaylist,
         insertSong,
+        updateSong,
+        deleteSong,
         insertCollaborator,
         deleteSongPlaylist,
         deleteCollaboratorPlaylist
@@ -851,19 +1343,27 @@ const resolvers = {
 
 };
 
+const executableSchema = makeExecutableSchema({
+    typeDefs,
+    resolvers
+});
+const protectedSchema = applyMiddleware(executableSchema, authMiddleware);
 
 // use apollo server
 const server = new ApolloServer({
+    schema: protectedSchema,
     typeDefs,
     resolvers,
     context: function ({
         req
     }) {
+        req: req;
         return {
             SongListLoader,
             PlaylistCreatedByLoader,
             PlaylistSongLoader,
-            PlaylistCollaboratorLoader
+            PlaylistCollaboratorLoader,
+            req
         };
     }
 });

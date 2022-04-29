@@ -19,7 +19,7 @@ const loadCollaboratorPlaylist = async function (collaboratorIds) {
         collaboratorMap[collaborator._id] = collaborator;
     });
 
-    return userIds.map(id => userMap[id]);
+    return collaboratorIds.map(id => collaboratorMap[id]);
 };
 
 const playlistLoader = new DataLoader(loadCollaboratorPlaylist);
