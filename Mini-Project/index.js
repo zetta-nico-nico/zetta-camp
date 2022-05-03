@@ -112,7 +112,6 @@ input UserInput{
 }
 
 input UserEditInput{
-    ID: String
     name: String
     password: String
     user_type: user_type_enum
@@ -138,9 +137,8 @@ input UserSortingInput{
 
 input SongListInput{
     name: String
-    genre: String,
-    duration: Int,
-    created_by: ID
+    genre: String
+    duration: Int
 }
 
 input SongListEditInput{
@@ -181,7 +179,6 @@ input LoginUserInput{
 input PlaylistInput{
     playlist_name: String
     song_ids: [ID]
-    created_by: ID
     collaborator_ids: [ID]
 }
 
@@ -284,7 +281,7 @@ const loginUser = async function (parent, {
         // return checkEmail;
 
     } catch (err) {
-        throw new Error(`Error login ${err.message}`);
+        throw new Error(`Error login : ${err.message}`);
     };
 };
 
@@ -730,16 +727,7 @@ const insertSong = async function (parent, {
             playlist_id,
             song_id
         } = playlist_input;
-        // console.log(playlist_id, song_id);
-        // const result = await PlaylistModel.updateOne({
-        //     _id: playlist_id
-        // }, {
-        //     $addToSet: {
-        //         song_ids: song_id
-        //     }
-        // }, {
-        //     new: true
-        // });
+        console.log(song_id);
         // insert data with method updateOne and add new song
         const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
             $addToSet: {
@@ -849,10 +837,19 @@ const deleteCollaboratorPlaylist = async function (parent, {
 
 // ======================= Query =======================
 // get all playlist data
-const getAllPlaylist = async function (parent) {
+const getAllPlaylist = async function (parent, args) {
     try {
         // get all data using find method
-        const result = await PlaylistModel.find();
+        const result = await PlaylistModel.find({
+            $or: [{
+                    created_by: args.token
+                },
+                {
+                    collaborator_ids: args.token
+                }
+            ]
+
+        });
         return result;
     } catch (err) {
         throw new Error(`Error getting all playlist ${err.message}`);
@@ -1027,7 +1024,7 @@ const insertUserAuth = async function (resolver, parent, args, context) {
         // get token
         let dataToken = context.req.get('Authorization');
 
-        console.log(args);
+        // console.log(args);
         if (!dataToken) {
             throw new Error('Token required');
         };
@@ -1062,9 +1059,6 @@ const editUserAuth = async function (resolver, parent, {
 }, context) {
     try {
         // destruct data
-        const {
-            ID
-        } = user_input;
 
         // get token
         let dataToken = context.req.get('Authorization');
@@ -1080,17 +1074,8 @@ const editUserAuth = async function (resolver, parent, {
             if (!dataToken || Object.keys(searchData).length === 0) {
                 throw new Error('Token is invalid');
             } else {
-                // context.token = token;
-                // console.log(`ok`);
-                // check if token is same with id to edit
-                // if(dataToken ===)
-                // console.log(ID, dataToken);
-                if (ID === dataToken) {
-                    context.token = dataToken;
-                } else {
-                    throw new Error(`You can't edit another user`);
-                }
-                // console.log(ID === dataToken);
+                // assign data token to ID for edit data
+                user_input.ID = dataToken;
             }
         }
         return resolver();
@@ -1105,7 +1090,7 @@ const insertSongAuth = async function (resolver, parent, {
 }, context) {
     try {
         // destruct song list input
-        const {
+        let {
             created_by
         } = songlist_input;
         // console.log(created_by);
@@ -1128,6 +1113,8 @@ const insertSongAuth = async function (resolver, parent, {
                 // check if token is administrator
                 // only administrator can add song
                 if (searchData[0].user_type === 'Administrator') {
+                    songlist_input.created_by = mongoose.Types.ObjectId(dataToken);
+                    // console.log(songlist_input);
                     context.token = dataToken;
                 } else {
                     throw new Error('You are not administrator');
@@ -1240,6 +1227,38 @@ const deleteSongAuth = async function (resolver, parent, {
     };
 };
 
+// get all playlist base on user
+const getAllPlaylistAuth = async function (resolver, parent, args, context) {
+    try {
+        // get token
+        const dataToken = context.req.get('Authorization');
+        console.log(dataToken);
+        // //set token to argument
+        // args.token = dataToken;
+        // // console.log(args);
+        // check if token is valid or not
+        if (!dataToken) {
+            throw new Error(`Token required`);
+        } else {
+            // check if token is in user or not
+            const searchUser = await UserModel.find({
+                _id: dataToken
+            });
+            // console.log(searchUser);
+            // check if user is empty or not
+            if (Object.keys(searchUser).length === 0) {
+                throw new Error(`Token is invalid`);
+            } else {
+                args.token = mongoose.Types.ObjectId(dataToken);
+            };
+        };
+
+        return resolver();
+    } catch (err) {
+        throw new Error(`Error get all playlist : ${err.message}`);
+    }
+};
+
 
 // insert playlist auth
 const insertPlaylistAuth = async function (resolver, parent, {
@@ -1269,7 +1288,12 @@ const insertPlaylistAuth = async function (resolver, parent, {
             } else {
                 // check if user is creator or not
                 if (searchUser[0].user_type === 'Creator') {
-                    created_by = dataToken;
+                    // created_by = dataToken;
+                    // console.log(playlist_input)
+                    // const creatorID = mongoose.Types.ObjectId(dataToken);
+                    playlist_input.created_by = dataToken;
+                    playlist_input.collaborator_ids.push(dataToken);
+                    // console.log(playlist_input);
                 } else {
                     throw new Error(`You are not creator`);
                 }
@@ -1281,13 +1305,111 @@ const insertPlaylistAuth = async function (resolver, parent, {
     return resolver();
 };
 
+// add and remove song mutation
+const songPlaylistAuth = async function (resolver, parent, {
+    playlist_input
+}, context) {
+    try {
+        // destruct playlist input
+        const {
+            playlist_id,
+            song_id
+        } = playlist_input;
+        // console.log(playlist_id, song_id);
+
+        // get token 
+        const dataToken = context.req.get('Authorization');
+
+        // check if token is empty or not
+        if (!dataToken) {
+            throw new Error(`Token required`);
+        } else {
+            // check if token is on user or not
+            const searchUser = await UserModel.find({
+                _id: dataToken
+            });
+            // console.log(searchUser);
+
+            // check if user who make the playlist
+            const checkPlaylist = await PlaylistModel.find({
+                _id: playlist_id,
+                $or: [{
+                        created_by: mongoose.Types.ObjectId(dataToken)
+                    },
+                    {
+                        collaborator_ids: mongoose.Types.ObjectId(dataToken),
+                    }
+                ]
+            });
+            // console.log(checkPlaylist);
+
+            if (Object.keys(checkPlaylist).length === 0) {
+                throw new Error('Only creator or/collaborator can add/remove the song');
+            } else {
+                context.token = dataToken;
+            };
+        };
+
+        return resolver();
+
+    } catch (err) {
+        throw new Error(`Error mutation song : ${err.message}`);
+    };
+};
+
+// add and remove collaborator
+const collaboratorPlaylistAuth = async function (resolver, parent, {
+    playlist_input
+}, context) {
+    try {
+        // destruct playlist input
+        const {
+            playlist_id,
+            song_id
+        } = playlist_input;
+        // console.log(playlist_id, song_id);
+
+        // get token 
+        const dataToken = context.req.get('Authorization');
+
+        // check if token is empty or not
+        if (!dataToken) {
+            throw new Error(`Token required`);
+        } else {
+            // check if token is on user or not
+            const searchUser = await UserModel.find({
+                _id: dataToken
+            });
+            // console.log(searchUser);
+
+            // check if user who make the playlist
+            const checkPlaylist = await PlaylistModel.find({
+                _id: playlist_id,
+                created_by: dataToken
+            });
+            // console.log(checkPlaylist);
+
+            if (Object.keys(checkPlaylist).length === 0) {
+                throw new Error('Only playlist creator can add/remove collaborator');
+            } else {
+                // console.log("OK");
+                context.token = dataToken;
+            };
+        };
+
+        return resolver();
+    } catch (err) {
+        throw new Error(`Error mutation song : ${err.message}`);
+    }
+};
+
 // middleware
 let authMiddleware = {
     Query: {
         getAllUsers: insertUserAuth,
         getAllSongs: insertUserAuth,
         getSongById: insertUserAuth,
-        getAllPlaylist: insertUserAuth,
+        getAllPlaylist: getAllPlaylistAuth,
         getPlaylistById: insertUserAuth
     },
     Mutation: {
@@ -1296,7 +1418,13 @@ let authMiddleware = {
         insertSongList: insertSongAuth,
         updateSong: updateSongAuth,
         deleteSong: deleteSongAuth,
-        insertPlaylist: insertPlaylistAuth
+        insertPlaylist: insertPlaylistAuth,
+        insertSong: songPlaylistAuth,
+        deleteSongPlaylist: songPlaylistAuth,
+        insertCollaborator: collaboratorPlaylistAuth,
+        deleteCollaboratorPlaylist: collaboratorPlaylistAuth
+
+
     }
 };
 
