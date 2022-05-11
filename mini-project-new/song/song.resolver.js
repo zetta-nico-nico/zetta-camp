@@ -85,19 +85,27 @@ const getAllSongs = async function (parent, {
 }) {
     try {
 
-        // destruct song list input
-        const {
-            limit,
-            skip
-        } = songlist_input;
+        // check if input is empty or not
+        if (!songlist_input) {
+            // get all book lists data using find method
+            const result = await SonglistsModel.find();
+            return result;
+        } else {
 
-        // get all book lists data using find method
-        const result = await SonglistsModel.aggregate([{
-            $skip: skip * limit
-        }, {
-            $limit: limit
-        }]);
-        return result;
+            // destruct song list input
+            const {
+                limit,
+                skip
+            } = songlist_input;
+
+            // get all book lists data using find method
+            const result = await SonglistsModel.aggregate([{
+                $skip: skip * limit
+            }, {
+                $limit: limit
+            }]);
+            return result;
+        }
     } catch (err) {
         throw new Error(`Error getAllSongs : ${err.message}`);
     };

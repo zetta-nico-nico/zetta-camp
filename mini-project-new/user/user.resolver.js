@@ -143,20 +143,29 @@ const getAllUsers = async function (parent, {
     user_input
 }) {
     try {
-        // destruct user input
-        const {
-            limit,
-            skip
-        } = user_input;
+        // check if user input is empty or not
+        if (!user_input) {
+            // show all data
+            const result = await UserModel.find();
+            return result;
+        } else {
+            // destruct user input
+            const {
+                limit,
+                skip
+            } = user_input;
 
-        const result = await UserModel.aggregate([{
-                $skip: skip * limit
-            },
-            {
-                $limit: limit
-            }
-        ]);
-        return result;
+            const result = await UserModel.aggregate([{
+                    $skip: skip * limit
+                },
+                {
+                    $limit: limit
+                }
+            ]);
+            return result;
+        };
+
+
     } catch (err) {
         throw new Error(`Error getAllUser : ${err.message}`);
     };

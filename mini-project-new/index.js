@@ -56,40 +56,6 @@ const PlaylistSongLoader = require('./playlist/playlist.song.loader');
 // import playlist collaborator list
 const PlaylistCollaboratorLoader = require('./playlist/playlist.collaborator.loader');
 
-// ======================= Loader =======================
-// loaders
-const getSonglistDataLoader = async function (parent, args, context) {
-    if (parent.created_by) {
-        // console.log(await context);
-        return await context.SongListLoader.load(parent.created_by);
-
-        // return context.SongListLoader.
-    }
-};
-
-// get user data playlist
-const getPlaylistCreatedByLoader = async function (parent, args, context) {
-    // console.log(parent.created_by);
-    if (parent.created_by) {
-        return await context.PlaylistCreatedByLoader.load(parent.created_by);
-    };
-};
-
-// get song data playlist
-const getPlaylistSongLoader = async function (parent, args, context) {
-    // console.log(parent.song_ids);
-    if (parent.song_ids) {
-        return await context.PlaylistSongLoader.loadMany(parent.song_ids);
-    }
-};
-
-// get collaborator data playlist
-const getPlaylistCollaboratorLoader = async function (parent, args, context) {
-    // console.log(parent.collaborator_ids);
-    if (parent.collaborator_ids) {
-        return await context.PlaylistCollaboratorLoader.loadMany(parent.collaborator_ids);
-    }
-};
 
 
 // import user data
