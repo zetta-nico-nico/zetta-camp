@@ -16,6 +16,9 @@ const playlistResolver = require('./playlist.resolver');
 // import typedefs
 const playlistTypedefs = require('./playlist.typedefs');
 
+// import auth
+const playlistAuth = require('./playlist.auth');
+
 // export data
 module.exports = {
     playlistTypedefs,
@@ -23,5 +26,6 @@ module.exports = {
     playlistModel,
     playlistCollaboratorLoader,
     playlistCreatedByLoader,
-    playlistSongLoader
+    playlistSongLoader,
+    playlistAuth,
 };

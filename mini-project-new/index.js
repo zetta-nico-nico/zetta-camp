@@ -44,13 +44,61 @@ mongoose.connect(mongoDB, {
     }
 });
 
+// import song list loader
+const SongListLoader = require('./song/song.loader');
+
+// import playlist created by loader
+const PlaylistCreatedByLoader = require('./playlist/playlist.createdby.loader');
+
+// import playlist song list
+const PlaylistSongLoader = require('./playlist/playlist.song.loader');
+
+// import playlist collaborator list
+const PlaylistCollaboratorLoader = require('./playlist/playlist.collaborator.loader');
+
+// ======================= Loader =======================
+// loaders
+const getSonglistDataLoader = async function (parent, args, context) {
+    if (parent.created_by) {
+        // console.log(await context);
+        return await context.SongListLoader.load(parent.created_by);
+
+        // return context.SongListLoader.
+    }
+};
+
+// get user data playlist
+const getPlaylistCreatedByLoader = async function (parent, args, context) {
+    // console.log(parent.created_by);
+    if (parent.created_by) {
+        return await context.PlaylistCreatedByLoader.load(parent.created_by);
+    };
+};
+
+// get song data playlist
+const getPlaylistSongLoader = async function (parent, args, context) {
+    // console.log(parent.song_ids);
+    if (parent.song_ids) {
+        return await context.PlaylistSongLoader.loadMany(parent.song_ids);
+    }
+};
+
+// get collaborator data playlist
+const getPlaylistCollaboratorLoader = async function (parent, args, context) {
+    // console.log(parent.collaborator_ids);
+    if (parent.collaborator_ids) {
+        return await context.PlaylistCollaboratorLoader.loadMany(parent.collaborator_ids);
+    }
+};
+
 
 // import user data
 // destruct user index
 const {
     userTypedefs,
     userResolver,
-    userModel
+    userModel,
+    userAuth
 } = require('./user/user.index');
 // console.log(User);
 
@@ -60,7 +108,8 @@ const {
     songTypedefs,
     songResolver,
     songModel,
-    songLoader
+    songAuth
+    // songLoader
 } = require('./song/song.index');
 // console.log(songModel);
 
@@ -70,9 +119,10 @@ const {
     playlistTypedefs,
     playlistResolver,
     playlistModel,
-    playlistCollaboratorLoader,
-    playlistCreatedByLoader,
-    playlistSongLoader
+    playlistAuth
+    // playlistCollaboratorLoader,
+    // playlistCreatedByLoader,
+    // playlistSongLoader
 } = require('./playlist/playlist.index');
 // console.log(playlistModel);
 
@@ -103,9 +153,26 @@ resolvers = merge(
 );
 // console.log(resolvers);
 
+// define middleware
+let authMiddleware = {};
+
+// define all middleware
+authMiddleware = merge(
+    userAuth,
+    songAuth,
+    playlistAuth
+);
+// console.log(authMiddleware);
+
+const executableSchema = makeExecutableSchema({
+    typeDefs,
+    resolvers
+});
+const protectedSchema = applyMiddleware(executableSchema, authMiddleware);
 
 // use apollo server
 const server = new ApolloServer({
+    schema: protectedSchema,
     typeDefs,
     resolvers,
     context: function ({
@@ -113,10 +180,10 @@ const server = new ApolloServer({
     }) {
         req: req;
         return {
-            songLoader,
-            playlistCollaboratorLoader,
-            playlistCreatedByLoader,
-            playlistSongLoader,
+            SongListLoader,
+            PlaylistCollaboratorLoader,
+            PlaylistCreatedByLoader,
+            PlaylistSongLoader,
             req
         };
     }

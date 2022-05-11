@@ -1,6 +1,9 @@
 // import user model
 const UserModel = require('./user.model');
 
+// import jwt
+const jwt = require('jsonwebtoken');
+
 // import bcrypt
 const bcrypt = require('bcrypt');
 
@@ -15,6 +18,14 @@ const loginUser = async function (parent, {
             password
         } = user_input;
         // console.log(email, password);
+
+        // try {
+        //     const decoded = jwt.verify(token, 'nico');
+        //     console.log(decoded);
+        // } catch (err) {
+        //     console.log(`Error jwt ${err.message}`);
+        // }
+
 
         // check if email is in database or not
         const checkEmail = await UserModel.find({
@@ -31,7 +42,19 @@ const loginUser = async function (parent, {
             // make id to string
             const token = checkEmail[0]._id.toString();
             // console.log(token);
+
+            // if password is true
+            // make token
             if (checkPassword) {
+                // make token
+                // key = nico
+                // expired in 1 hour
+                const token = jwt.sign({
+                    email: email,
+                    password: password
+                }, 'nico', {
+                    expiresIn: '1h'
+                });
                 return {
                     email: email,
                     token: token

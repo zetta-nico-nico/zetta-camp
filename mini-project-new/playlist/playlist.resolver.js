@@ -43,7 +43,7 @@ const insertSong = async function (parent, {
             playlist_id,
             song_id
         } = playlist_input;
-        console.log(song_id);
+        // console.log(song_id);
         // insert data with method updateOne and add new song
         const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
             $addToSet: {
@@ -69,17 +69,6 @@ const insertCollaborator = async function (parent, {
             user_id
         } = playlist_input;
         // console.log(playlist_id, user_id);
-
-        // insert collaborator to existing playlist
-        // const result = await PlaylistModel.updateOne({
-        //     _id: playlist_id,
-        // }, {
-        //     $addToSet: {
-        //         collaborator_ids: user_id
-        //     }
-        // }, {
-        //     new: true
-        // });
 
         // add collaborator to existing playlist
         const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
@@ -144,7 +133,7 @@ const deleteCollaboratorPlaylist = async function (parent, {
         }, {
             new: true
         });
-        console.log(result);
+        // console.log(result);
         return result;
     } catch (err) {
         throw new Error(`Error removing collaborator playlist : ${err.message}`);
@@ -156,21 +145,16 @@ const deleteCollaboratorPlaylist = async function (parent, {
 const getAllPlaylist = async function (parent, args) {
     try {
         // get all data using find method
-        // const result = await PlaylistModel.find({
-        //     $or: [{
-        //             created_by: args.token
-        //         },
-        //         {
-        //             collaborator_ids: args.token
-        //         }
-        //     ]
-
-        // });
         const result = await PlaylistModel.find({
-
+            $or: [{
+                    created_by: args.token
+                },
+                {
+                    collaborator_ids: args.token
+                }
+            ]
 
         });
-        // console.log(result);
         return result;
     } catch (err) {
         throw new Error(`Error getting all playlist ${err.message}`);
