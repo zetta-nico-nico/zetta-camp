@@ -1,0 +1,122 @@
+[{
+  "_id": {
+    "$oid": "626a0a1db42057e1eeb74c10"
+  },
+  "name": "Nico",
+  "email": "Satu@gmail.com",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626a0d56142756065ee429a7"
+  },
+  "name": "Nico",
+  "email": "Dua@gmail.com",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626a0d87316f262624d4e03c"
+  },
+  "name": "Nico",
+  "email": "TIga@gmail.com",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626a0da3e27b3f16ea5f11d2"
+  },
+  "name": "Nico",
+  "email": "empat@gmail.com",
+  "hashed_password": "$2b$10$7eEkUKUEVGkR.nbln3pNPOwj7LKEwuwrRRT4gTIaFSnMu23ReCfPK",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626a170a60b679f7e1c4dfde"
+  },
+  "name": "NICO",
+  "email": "lima@gmail.com",
+  "hashed_password": "$2b$10$amujabW0MGax86j7zuDUU.5zqSHomdk7zgYOv/odapP9a.qe3h9EC",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626a171460b679f7e1c4dfe2"
+  },
+  "name": "niCo",
+  "email": "enam@gmail.com",
+  "hashed_password": "$2b$10$yRMzmVzAH2JTxWvg2rrRIeN/JdScQ5oTzziRgAELK3ZMJnGmNsLI.",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626a1c29fbb658b0029ac7ab"
+  }
+},{
+  "_id": {
+    "$oid": "626a20e99404db1970328dce"
+  },
+  "name": "Tujuh",
+  "email": "tujuh@gmail.com",
+  "hashed_password": "$2b$10$Jh0vb4Ras5Wh2mbNT9GileypXxl4ahHqwQBJ4mDIO/t7hGptQF.AO",
+  "user_type": "Enjoyer"
+},{
+  "_id": {
+    "$oid": "626a5c4d55c9099912903124"
+  },
+  "name": "Nico Nico",
+  "email": "nico@gmail.com",
+  "hashed_password": "$2b$10$8bWkTRN6wNQ7/EWBXkV2DeUlvEUVNhG1RnDsASbljyLZm4zBPkAwy",
+  "user_type": "Administrator"
+},{
+  "_id": {
+    "$oid": "626b5f2317e0c9944d6aff94"
+  },
+  "name": "Nico Nico",
+  "email": "niconico@gmail.com",
+  "hashed_password": "$2b$10$BiOOred.bg5YomKxgJI5meV.80R3AJyze443u5XO/dheEPNZ8lOIu",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626b9067d9e7164b9449c90a"
+  },
+  "name": "Nico Satu",
+  "email": "nicosatu@gmail.com",
+  "hashed_password": "$2b$10$P1XWJ8cQ3ygJKxKtxhD4beF.gtZMBMRCG1mwaiP7jQ2DJOr2svnLi",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626b9079d9e7164b9449c90c"
+  },
+  "name": "nico dua password = nicodua",
+  "email": "nicodua@gmail.com",
+  "hashed_password": "$2b$10$K5LYH./z5aoA2RTFgd2n3uJ0b0FFfxkRZN4FBFbWoPWDErk1YwHiC",
+  "user_type": "Creator"
+},{
+  "_id": {
+    "$oid": "626b9084d9e7164b9449c90e"
+  },
+  "name": "Nico Tiga",
+  "email": "nicotiga@gmail.com",
+  "hashed_password": "$2b$10$lH8Tmqh0y9krbr3IATeT0.10yhva2pNril77Fw3i2gGa3HCmk88QG",
+  "user_type": "Enjoyer"
+},{
+  "_id": {
+    "$oid": "626b90fad9e7164b9449c911"
+  },
+  "name": "Nico Empat",
+  "email": "nicoempat@gmail.com",
+  "hashed_password": "$2b$10$aEDjY1vcNcsM2Vzprcs4RuknvFmjPBXNgJ0/HT/qN0Y/STXeiWGNq",
+  "user_type": "Administrator"
+},{
+  "_id": {
+    "$oid": "626caff4a1af16c1357649d8"
+  },
+  "name": "password = nico",
+  "email": "nicosembilan@gmail.com",
+  "hashed_password": "$2b$10$ZDcGy15A1nXqWmO.hgrm1OlGaw6GltX8VE2oHKZy9EfK.XMK4Prcy",
+  "user_type": "Enjoyer"
+},{
+  "_id": {
+    "$oid": "627b586fbe703cf75a25139b"
+  },
+  "name": "password = nicosepuluh",
+  "email": "nicosepuluh@gmail.com",
+  "hashed_password": "$2b$10$DSNAOeg/lq5bBT71nvH2Nu.EaKFxBkbmIY.zxixPz9hatLAeb1vNe",
+  "user_type": "Administrator"
+}]

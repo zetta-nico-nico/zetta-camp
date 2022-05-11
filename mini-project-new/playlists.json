@@ -1,0 +1,167 @@
+[{
+  "_id": {
+    "$oid": "626a32a82846d3425c7d34e0"
+  },
+  "playlist_name": "Playlist 1",
+  "song_ids": [
+    {
+      "$oid": "626a2a178239c580f26bec8f"
+    },
+    {
+      "$oid": "626a2ae69d3ccee58bd254ad"
+    },
+    {
+      "$oid": "626a2bee0e2538212473af08"
+    }
+  ],
+  "created_by": {
+    "$oid": "626a170a60b679f7e1c4dfde"
+  },
+  "collaborator_ids": [
+    {
+      "$oid": "626a171460b679f7e1c4dfe2"
+    },
+    {
+      "$oid": "626a0a1db42057e1eeb74c10"
+    },
+    {
+      "$oid": "626a20e99404db1970328dce"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626baac157a8a1889847b734"
+  },
+  "playlist_name": "Playlist 2",
+  "song_ids": [],
+  "created_by": {
+    "$oid": "626b9067d9e7164b9449c90a"
+  },
+  "collaborator_ids": [],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626cbb48b4d5920524774a6a"
+  },
+  "playlist_name": "Playlist 3",
+  "song_ids": [
+    {
+      "$oid": "626b85d1800f7dd578df4d8c"
+    },
+    {
+      "$oid": "626cb67367ca8f68b801911b"
+    }
+  ],
+  "created_by": {
+    "$oid": "626b9079d9e7164b9449c90c"
+  },
+  "collaborator_ids": [
+    {
+      "$oid": "626caff4a1af16c1357649d8"
+    },
+    {
+      "$oid": "626b90fad9e7164b9449c911"
+    },
+    {
+      "$oid": "626b9079d9e7164b9449c90c"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626cbb60b4d5920524774a70"
+  },
+  "playlist_name": "Playlist 4",
+  "song_ids": [
+    {
+      "$oid": "626b85d1800f7dd578df4d8c"
+    },
+    {
+      "$oid": "626b7aa64fc1143bfa20f10f"
+    }
+  ],
+  "created_by": {
+    "$oid": "626b9079d9e7164b9449c90c"
+  },
+  "collaborator_ids": [
+    {
+      "$oid": "626caff4a1af16c1357649d8"
+    },
+    {
+      "$oid": "626b90fad9e7164b9449c911"
+    },
+    {
+      "$oid": "626b9079d9e7164b9449c90c"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6270aa80449671d603791e73"
+  },
+  "playlist_name": "Playlist 5",
+  "song_ids": [
+    {
+      "$oid": "626a118d189efa3cd597fb03"
+    },
+    {
+      "$oid": "626a2a178239c580f26bec8f"
+    },
+    {
+      "$oid": "626b85d1800f7dd578df4d8c"
+    }
+  ],
+  "created_by": {
+    "$oid": "626a0d56142756065ee429a7"
+  },
+  "collaborator_ids": [
+    {
+      "$oid": "626b9079d9e7164b9449c90c"
+    },
+    {
+      "$oid": "626b9067d9e7164b9449c90a"
+    },
+    {
+      "$oid": "626b90fad9e7164b9449c911"
+    },
+    {
+      "$oid": "626a0d56142756065ee429a7"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "627b75a308c49aae93c62b61"
+  },
+  "playlist_name": "Playlist 6",
+  "song_ids": [
+    {
+      "$oid": "626a118d189efa3cd597fb03"
+    },
+    {
+      "$oid": "626b85bc00caaefedef5b5d4"
+    },
+    {
+      "$oid": "626a2a178239c580f26bec8f"
+    }
+  ],
+  "created_by": {
+    "$oid": "626b9067d9e7164b9449c90a"
+  },
+  "collaborator_ids": [
+    {
+      "$oid": "627b586fbe703cf75a25139b"
+    },
+    {
+      "$oid": "626caff4a1af16c1357649d8"
+    },
+    {
+      "$oid": "626b9067d9e7164b9449c90a"
+    },
+    {
+      "$oid": "626b9084d9e7164b9449c90e"
+    }
+  ],
+  "__v": 0
+}]

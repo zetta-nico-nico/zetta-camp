@@ -1,0 +1,78 @@
+[{
+  "_id": {
+    "$oid": "626a118d189efa3cd597fb03"
+  },
+  "name": "Nightmare",
+  "genre": "Rock",
+  "duration": 150,
+  "created_by": {
+    "$oid": "626a0da3e27b3f16ea5f11d2"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626a2a178239c580f26bec8f"
+  },
+  "name": "One OK",
+  "genre": "Rock",
+  "duration": 150,
+  "created_by": {
+    "$oid": "626a0da3e27b3f16ea5f11d2"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626a2ae69d3ccee58bd254ad"
+  },
+  "name": "One OK",
+  "genre": "Rock 1",
+  "duration": 150,
+  "created_by": {
+    "$oid": "626a20e99404db1970328dce"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626b7a914fc1143bfa20f10d"
+  },
+  "name": "One OK",
+  "genre": "Rock 1",
+  "duration": 150,
+  "created_by": {
+    "$oid": "626b5f2317e0c9944d6aff94"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626b7aa64fc1143bfa20f10f"
+  },
+  "name": "One OK Rock",
+  "genre": "Rock",
+  "duration": 150,
+  "created_by": {
+    "$oid": "626b5f2317e0c9944d6aff94"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626b85bc00caaefedef5b5d4"
+  },
+  "name": "Afterlife",
+  "genre": "Rock",
+  "duration": 180,
+  "created_by": {
+    "$oid": "626b5f2317e0c9944d6aff94"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "626b85d1800f7dd578df4d8c"
+  },
+  "name": "Afterlife",
+  "genre": "Rock",
+  "duration": 180,
+  "created_by": {
+    "$oid": "626b5f2317e0c9944d6aff94"
+  },
+  "__v": 0
+}]
