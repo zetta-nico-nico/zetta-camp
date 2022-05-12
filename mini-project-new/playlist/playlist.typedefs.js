@@ -7,7 +7,7 @@ const {
 // define schema
 const typeDefs = gql `
 type Playlists{
-    id: ID
+    _id: ID
     playlist_name: String
     song_id: [SongLists]
     created_by: Users

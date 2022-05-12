@@ -7,7 +7,7 @@ const {
 // define typedef
 const typeDefs = gql `
 type SongLists{
-    id: ID
+    _id: ID
     name: String
     genre: String,
     duration: Int,

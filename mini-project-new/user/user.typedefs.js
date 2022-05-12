@@ -6,7 +6,7 @@ const {
 
 const typeDefs = gql `
 type Users{
-    id: ID
+    _id: ID
     name: String
     email: String
     hashed_password: String
