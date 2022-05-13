@@ -14,6 +14,11 @@ type SongLists{
     created_by: Users
 }
 
+type AllSongLists{
+    count: Int
+    songs: [SongLists]
+}
+
 type SongId{
     song_id: Users
 }
@@ -24,7 +29,7 @@ extend enum SortingList{
 }
 
 extend input Pagination{
-    skip: Int
+    page: Int
     limit: Int
 }
 
@@ -67,7 +72,7 @@ extend type Mutation{
 }
 
 extend type Query{
-    getAllSongs(songlist_input: Pagination): [SongLists]
+    getAllSongs(songlist_input: Pagination): AllSongLists
     getSongById(songlist_input: SearchSongInput): SongLists
     getSongFilter(songlist_input: SongListFilterInput): [SongLists]
     getSongSort(songlist_input: SongListSortInput): [SongLists]

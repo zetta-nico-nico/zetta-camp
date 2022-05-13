@@ -1,12 +1,14 @@
 // import song model
 const SonglistsModel = require('./song.model');
 
+// import user model
+const UserModel = require('../user/user.model');
 
 // ======================= Song List =======================
 // ======================= Mutation =======================
 const insertSongList = async function (parent, {
     songlist_input
-}) {
+}, context) {
     try {
         // check if there is an input or not
         if (!songlist_input) {
@@ -17,21 +19,32 @@ const insertSongList = async function (parent, {
                 name,
                 genre,
                 duration,
-                created_by
             } = songlist_input;
 
             // console.log(name, genre, duration, created_by);
 
-            // define new model to store input
-            const newSong = new SonglistsModel({
-                name: name,
-                genre: genre,
-                duration: duration,
-                created_by: created_by
-            });
-            const result = await newSong.save();
-            return result;
-        }
+            // store id from context
+            const userId = context.user[0]._id;
+
+            // store user type from context
+            const userType = context.user[0].user_type;
+            // console.log(userType);
+
+            // check if user is administrator or not
+            if (userType === 'Administrator') {
+                // define new model to store input
+                const newSong = new SonglistsModel({
+                    name: name,
+                    genre: genre,
+                    duration: duration,
+                    created_by: userId
+                });
+                const result = await newSong.save();
+                return result;
+            } else {
+                throw new Error(`You are not Administrator.`);
+            };
+        };
     } catch (err) {
         throw new Error(`Error insertSongList : ${err.message}`);
     };
@@ -40,7 +53,7 @@ const insertSongList = async function (parent, {
 // update song
 const updateSong = async function (parent, {
     songlist_input
-}) {
+}, context) {
     try {
         // check if there is an input or not
         if (!songlist_input) {
@@ -52,14 +65,31 @@ const updateSong = async function (parent, {
                 name
             } = songlist_input;
             // console.log(song_id, name);
+            // console.log(context.user);
 
-            // search data using findbyid method
-            const result = await SonglistsModel.findByIdAndUpdate(song_id, {
-                name: name
-            }, {
-                new: true
+            // store id from context
+            const userId = context.user[0]._id;
+            // check if song created by user who login
+            const checkUser = await SonglistsModel.find({
+                _id: song_id,
+                created_by: userId
             });
-            return result;
+            // console.log(checkUser);
+
+            // check if song is created by login user
+            if (Object.keys(checkUser).length === 0) {
+                throw new Error(`You are not the song creator`);
+            } else {
+                // search data using findbyid method
+                const result = await SonglistsModel.findByIdAndUpdate(song_id, {
+                    name: name
+                }, {
+                    new: true
+                });
+                return result;
+            };
+            // return result;
+
         }
     } catch (er) {
         throw new Error(`Error updateSong : ${er.message}`);
@@ -70,7 +100,7 @@ const updateSong = async function (parent, {
 // delete song
 const deleteSong = async function (parent, {
     songlist_input
-}) {
+}, context) {
     try {
         // check if there is an input or not
         if (!songlist_input) {
@@ -82,11 +112,27 @@ const deleteSong = async function (parent, {
             } = songlist_input;
             // console.log(song_id);
 
-            // delete song
-            const result = await SonglistsModel.findByIdAndRemove(song_id, {
-                new: false
+            // get user id from context
+            const userId = context.user[0]._id;
+            // console.log(userId);
+
+            // check if song created by user login
+            const checkUser = await SonglistsModel.find({
+                _id: song_id,
+                created_by: userId
             });
-            return result;
+            // console.log(checkUser);
+
+            // check if check user is empty or not
+            if (Object.keys(checkUser).length === 0) {
+                throw new Error(`You can' delete another user's song`);
+            } else {
+                // delete song
+                const result = await SonglistsModel.findByIdAndRemove(song_id, {
+                    new: false
+                });
+                return result;
+            };
         }
     } catch (err) {
         throw new Error(`Error deleting song : ${err.message}`);
@@ -102,23 +148,33 @@ const getAllSongs = async function (parent, {
         // check if input is empty or not
         if (!songlist_input) {
             // get all book lists data using find method
-            const result = await SonglistsModel.find();
-            return result;
+            const songs = await SonglistsModel.find();
+            const count = await SonglistsModel.count();
+
+            return {
+                songs,
+                count
+            };
         } else {
 
             // destruct song list input
             const {
                 limit,
-                skip
+                page
             } = songlist_input;
 
             // get all book lists data using find method
-            const result = await SonglistsModel.aggregate([{
-                $skip: skip * limit
+            const songs = await SonglistsModel.aggregate([{
+                $skip: page * limit
             }, {
                 $limit: limit
             }]);
-            return result;
+            const count = await SonglistsModel.count();
+
+            return {
+                songs,
+                count
+            };
         };
 
     } catch (err) {

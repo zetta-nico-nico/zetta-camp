@@ -13,6 +13,10 @@ type Users{
     user_type: user_type_enum
 }
 
+type AllUsers{
+    users: [Users],
+    count: Int
+}
 enum user_type_enum{
     Administrator
     Creator
@@ -42,7 +46,7 @@ input UserSearchInput{
 }
 
 input Pagination{
-    skip: Int
+    page: Int
     limit: Int
 }
 
@@ -56,6 +60,7 @@ input UserSortingInput{
 }
 
 type LoginUser{
+    id: ID
     email: String
     token: String
 }
@@ -71,7 +76,7 @@ extend type Mutation{
 }
 
 extend type Query{
-    getAllUsers(user_input: Pagination): [Users]
+    getAllUsers(user_input: Pagination): AllUsers
     getAllUserFilter(user_input: UserFilterInput): [Users]
     getUserById(user_input: UserSearchInput) : Users
     getUserSort(user_input: UserSortingInput): [Users] 

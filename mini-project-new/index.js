@@ -56,7 +56,8 @@ const PlaylistSongLoader = require('./playlist/playlist.song.loader');
 // import playlist collaborator list
 const PlaylistCollaboratorLoader = require('./playlist/playlist.collaborator.loader');
 
-
+// import authentication
+const userAuthentication = require('./middleware/auth');
 
 // import user data
 // destruct user index
@@ -124,9 +125,10 @@ let authMiddleware = {};
 
 // define all middleware
 authMiddleware = merge(
-    userAuth,
-    songAuth,
-    playlistAuth
+    // userAuth,
+    // songAuth,
+    // playlistAuth
+    userAuthentication
 );
 // console.log(authMiddleware);
 

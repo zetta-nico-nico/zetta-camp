@@ -6,7 +6,7 @@ const PlaylistModel = require('./playlist.model');
 // input playlist 
 const insertPlaylist = async function (parent, {
     playlist_input
-}) {
+}, context) {
     try {
         // check if there is an input or not
         if (!playlist_input) {
@@ -16,16 +16,19 @@ const insertPlaylist = async function (parent, {
             const {
                 playlist_name,
                 song_ids,
-                created_by,
                 collaborator_ids
             } = playlist_input;
-            // console.log(playlist_name, song_ids, created_by, collaborator_ids);
+            // console.log(playlist_name, song_ids, collaborator_ids);
+
+            // save user id from token
+            const userId = context.user[0]._id;
+            // console.log(userId);
 
             // save input to new model
             const newPlaylist = new PlaylistModel({
                 playlist_name: playlist_name,
                 song_ids: song_ids,
-                created_by: created_by,
+                created_by: userId,
                 collaborator_ids: collaborator_ids
             });
 
@@ -41,7 +44,7 @@ const insertPlaylist = async function (parent, {
 // insert song with playlist id and song id
 const insertSong = async function (parent, {
     playlist_input
-}) {
+}, context) {
     try {
         if (!playlist_input) {
             throw new Error('Please input data first');
@@ -51,16 +54,39 @@ const insertSong = async function (parent, {
                 playlist_id,
                 song_id
             } = playlist_input;
-            // console.log(song_id);
-            // insert data with method updateOne and add new song
-            const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
-                $addToSet: {
-                    song_ids: song_id
-                }
-            }, {
-                new: true
+            // console.log(song_id);    
+
+            // save user id from context
+            const userId = context.user[0]._id;
+            // console.log(userId);
+
+            // check if user who make the playlist or the collaborator
+            const checkPlaylist = await PlaylistModel.find({
+                _id: playlist_id,
+                $or: [{
+                    created_by: userId
+                }, {
+                    collaborator_ids: userId,
+                }]
             });
-            return result;
+            // console.log(checkPlaylist);
+
+            // check if any playlist in check playlist
+            if (Object.keys(checkPlaylist).length === 0) {
+                throw new Error('Only creator or/collaborator can add/remove the song');
+            } else {
+                // insert data with method updateOne and add new song
+                const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
+                    $addToSet: {
+                        song_ids: song_id
+                    }
+                }, {
+                    new: true
+                });
+                return result;
+            };
+
+
         };
     } catch (err) {
         throw new Error(`Error inserting playlist : ${err.message}`);
@@ -70,7 +96,7 @@ const insertSong = async function (parent, {
 // add collaborator with playlist id and user id
 const insertCollaborator = async function (parent, {
     playlist_input
-}) {
+}, context) {
     try {
         if (!playlist_input) {
             throw new Error('Please input data first');
@@ -82,15 +108,32 @@ const insertCollaborator = async function (parent, {
             } = playlist_input;
             // console.log(playlist_id, user_id);
 
-            // add collaborator to existing playlist
-            const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
-                $addToSet: {
-                    collaborator_ids: user_id
-                }
-            }, {
-                new: true
+            // store user id from context
+            const userId = context.user[0]._id;
+            // console.log(userId);
+
+            // check if playlist created by login user
+            const checkPlaylist = await PlaylistModel.find({
+                _id: playlist_id,
+                created_by: userId
             });
-            return result;
+            // console.log(checkPlaylist);
+
+            // check if playlist in database
+            if (Object.keys(checkPlaylist).length === 0) {
+                throw new Error('Only playlist creator can add/remove collaborator');
+            } else {
+                // add collaborator to existing playlist
+                const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
+                    $addToSet: {
+                        collaborator_ids: user_id
+                    }
+                }, {
+                    new: true
+                });
+                return result;
+            }
+
         };
     } catch (err) {
         throw new Error(`Error inserting playlist : ${err.message}`);
@@ -101,7 +144,7 @@ const insertCollaborator = async function (parent, {
 // remove song from playlist
 const deleteSongPlaylist = async function (parent, {
     playlist_input
-}) {
+}, context) {
     try {
         if (!playlist_input) {
             throw new Error('Please input data first');
@@ -113,17 +156,37 @@ const deleteSongPlaylist = async function (parent, {
             } = playlist_input;
             // console.log(playlist_input);
 
-            // get data by findbyid method
-            // pull song
-            const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
-                $pull: {
-                    song_ids: song_id
-                }
-            }, {
-                new: true
+            // save user id from context
+            const userId = context.user[0]._id;
+            // console.log(userId);
+
+            // check if user who make the playlist or the collaborator
+            const checkPlaylist = await PlaylistModel.find({
+                _id: playlist_id,
+                $or: [{
+                    created_by: userId
+                }, {
+                    collaborator_ids: userId,
+                }]
             });
-            console.log(result);
-            return result;
+            // console.log(checkPlaylist);
+
+            // check if any playlist in check playlist
+            if (Object.keys(checkPlaylist).length === 0) {
+                throw new Error('Only creator or/collaborator can add/remove the song');
+            } else {
+                // get data by findbyid method
+                // pull song
+                const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
+                    $pull: {
+                        song_ids: song_id
+                    }
+                }, {
+                    new: true
+                });
+                // console.log(result);
+                return result;
+            };
         };
     } catch (err) {
         throw new Error(`Error removing song playlist : ${err.message}`);
@@ -133,7 +196,7 @@ const deleteSongPlaylist = async function (parent, {
 // remove collaborator from playlist
 const deleteCollaboratorPlaylist = async function (parent, {
     playlist_input
-}) {
+}, context) {
     try {
         if (!playlist_input) {
             throw new Error('Please input data first');
@@ -144,17 +207,34 @@ const deleteCollaboratorPlaylist = async function (parent, {
                 user_id
             } = playlist_input;
             // console.log(playlist_id, user_id);
-            // find data using findbyid
-            // pull collaborator that match the user id
-            const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
-                $pull: {
-                    collaborator_ids: user_id
-                }
-            }, {
-                new: true
+
+            // store user id from context
+            const userId = context.user[0]._id;
+            // console.log(userId);
+
+            // check if playlist created by login user
+            const checkPlaylist = await PlaylistModel.find({
+                _id: playlist_id,
+                created_by: userId
             });
-            // console.log(result);
-            return result;
+            // console.log(checkPlaylist);
+
+            // check if playlist in database
+            if (Object.keys(checkPlaylist).length === 0) {
+                throw new Error('Only playlist creator can add/remove collaborator');
+            } else {
+                // find data using findbyid
+                // pull collaborator that match the user id
+                const result = await PlaylistModel.findByIdAndUpdate(playlist_id, {
+                    $pull: {
+                        collaborator_ids: user_id
+                    }
+                }, {
+                    new: true
+                });
+                // console.log(result);
+                return result;
+            };
         };
     } catch (err) {
         throw new Error(`Error removing collaborator playlist : ${err.message}`);
@@ -163,15 +243,20 @@ const deleteCollaboratorPlaylist = async function (parent, {
 
 // ======================= Query =======================
 // get all playlist data
-const getAllPlaylist = async function (parent, args) {
+const getAllPlaylist = async function (parent, args, context) {
     try {
+        // console.log(context.user);
+        // get id from context
+        const userId = context.user[0]._id;
+        // console.log(userId);
+
         // get all data using find method
         const result = await PlaylistModel.find({
             $or: [{
-                    created_by: args.token
+                    created_by: userId
                 },
                 {
-                    collaborator_ids: args.token
+                    collaborator_ids: userId
                 }
             ]
 

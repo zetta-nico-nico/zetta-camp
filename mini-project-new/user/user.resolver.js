@@ -7,10 +7,14 @@ const jwt = require('jsonwebtoken');
 // import bcrypt
 const bcrypt = require('bcrypt');
 
+// import mongoose
+const mongoose = require('mongoose');
+
+
 // login user to get token (id)
 const loginUser = async function (parent, {
     user_input
-}) {
+}, context) {
     try {
         // check if there is an input or not
         if (!user_input) {
@@ -35,8 +39,8 @@ const loginUser = async function (parent, {
                 const hashed_password = checkEmail[0].hashed_password;
                 const checkPassword = await bcrypt.compare(password, hashed_password);
 
-                // make id to string
-                const token = checkEmail[0]._id.toString();
+                // store
+                const userId = checkEmail[0]._id
                 // console.log(token);
 
                 // if password is true
@@ -46,12 +50,14 @@ const loginUser = async function (parent, {
                     // key = nico
                     // expired in 1 hour
                     const token = jwt.sign({
+                        id: userId,
                         email: email,
                         password: password
                     }, 'nico', {
                         expiresIn: '1h'
                     });
                     return {
+                        id: userId,
                         email: email,
                         token: token
                     };
@@ -108,7 +114,7 @@ const insertUser = async function (parent, {
 // edit user data
 const editUser = async function (parent, {
     user_input
-}) {
+}, context) {
     try {
         // check if there is an input or not
         if (!user_input) {
@@ -116,12 +122,14 @@ const editUser = async function (parent, {
         } else {
             // destruct user input
             const {
-                ID,
                 name,
                 user_type,
                 password
             } = user_input;
-            console.log(ID, name, user_type, password);
+            // console.log(ID, name, user_type, password);
+
+            // store id from context
+            const userId = context.user[0]._id;
 
             // define salt to hash password
             const salt = await bcrypt.genSalt(10);
@@ -129,7 +137,7 @@ const editUser = async function (parent, {
             const newPassword = await bcrypt.hash(password, salt);
 
             // search data base on token
-            const result = await UserModel.findByIdAndUpdate(ID, {
+            const result = await UserModel.findByIdAndUpdate(userId, {
                 name: name,
                 user_type: user_type,
                 password: newPassword
@@ -148,28 +156,37 @@ const editUser = async function (parent, {
 // get all user data
 const getAllUsers = async function (parent, {
     user_input
-}) {
+}, context) {
     try {
         // check if user input is empty or not
         if (!user_input) {
             // show all data
-            const result = await UserModel.find();
-            return result;
+            const users = await UserModel.find();
+            const count = await UserModel.count();
+            // console.log(totalData);
+            return {
+                users,
+                count
+            };
         } else {
             // destruct user input
             const {
                 limit,
-                skip
+                page
             } = user_input;
 
-            const result = await UserModel.aggregate([{
-                    $skip: skip * limit
+            const users = await UserModel.aggregate([{
+                    $skip: page * limit
                 },
                 {
                     $limit: limit
                 }
             ]);
-            return result;
+            const count = await UserModel.count();
+            return {
+                users,
+                count
+            };
         };
 
 
