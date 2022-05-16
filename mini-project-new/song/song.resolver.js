@@ -218,38 +218,96 @@ const getSongFilter = async function (parent, {
             const {
                 name,
                 genre,
-                creator_name
+                creator_name,
+                duration
             } = songlist_input;
-            // console.log(creator_name);
+            // console.log(songlist_input);
 
             // change all input into regex
             const regCreator = new RegExp(creator_name, 'i');
             const regGenre = new RegExp(genre, 'i');
             const regName = new RegExp(name, 'i');
+            const regDuration = new RegExp(duration, 'i');
+            // console.log(regDuration);
 
-            // lookup user first
-            // use regex to find data
-            const result = await SonglistsModel.aggregate([{
-                    $lookup: {
-                        from: 'users',
-                        localField: 'created_by',
-                        foreignField: '_id',
-                        as: 'song_data'
+            // check if duration is null
+            if (duration === null) {
+                // lookup user first
+                // use regex to find data
+                const result = await SonglistsModel.aggregate([{
+                        $lookup: {
+                            from: 'users',
+                            localField: 'created_by',
+                            foreignField: '_id',
+                            as: 'song_data'
+                        }
+                    }, {
+                        $unwind: '$song_data'
+                    },
+                    {
+                        $addFields: {
+                            duration_string: {
+                                $toString: '$duration'
+                            }
+                        }
+                    },
+                    {
+                        $match: {
+                            'name': {
+                                $regex: regName
+                            },
+                            'song_data.name': {
+                                $regex: regCreator
+                            },
+                            'genre': {
+                                $regex: regGenre
+                            }
+                        }
                     }
-                }, {
-                    $unwind: '$song_data'
-                },
-                {
-                    $match: {
-                        'name': {
-                            $regex: regName
-                        },
-                        'song_data.name': regCreator,
-                        genre: regGenre
+                ]);
+                // console.log(result);
+                return result;
+            } else {
+                // lookup user first
+                // use regex to find data
+                const result = await SonglistsModel.aggregate([{
+                        $lookup: {
+                            from: 'users',
+                            localField: 'created_by',
+                            foreignField: '_id',
+                            as: 'song_data'
+                        }
+                    }, {
+                        $unwind: '$song_data'
+                    },
+                    {
+                        $addFields: {
+                            duration_string: {
+                                $toString: '$duration'
+                            }
+                        }
+                    },
+                    {
+                        $match: {
+                            'name': {
+                                $regex: regName
+                            },
+                            'song_data.name': {
+                                $regex: regCreator
+                            },
+                            'genre': {
+                                $regex: regGenre
+                            },
+                            'duration_string': {
+                                $regex: regDuration
+                            }
+                        }
                     }
-                }
-            ]);
-            return result;
+                ]);
+                // console.log(result);
+                return result;
+
+            };
         };
     } catch (err) {
         throw new Error(`Error getSongFilter : ${err.message}`);

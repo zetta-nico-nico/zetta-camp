@@ -56,6 +56,7 @@ input SongListFilterInput{
     name: String
     genre: String
     creator_name: String
+    duration: Int
 }
 
 

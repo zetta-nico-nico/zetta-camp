@@ -41,6 +41,7 @@ const loginUser = async function (parent, {
 
                 // store
                 const userId = checkEmail[0]._id
+                const userType = checkEmail[0].user_type;
                 // console.log(token);
 
                 // if password is true
@@ -52,7 +53,8 @@ const loginUser = async function (parent, {
                     const token = jwt.sign({
                         id: userId,
                         email: email,
-                        password: password
+                        password: password,
+                        user_type: userType,
                     }, 'nico', {
                         expiresIn: '1h'
                     });

@@ -56,7 +56,7 @@ input UserFilterInput{
 }
 
 input UserSortingInput{
-    name: SortingList!
+    name: SortingList
 }
 
 type LoginUser{
