@@ -204,6 +204,7 @@ const getSongById = async function (parent, {
     };
 };
 
+
 // get all song with creator name
 const getSongFilter = async function (parent, {
     songlist_input
@@ -221,30 +222,33 @@ const getSongFilter = async function (parent, {
             } = songlist_input;
             // console.log(creator_name);
 
-            // make regex creator name
-            const regCreatorName = new RegExp(creator_name, 'i');
+            // change all input into regex
+            const regCreator = new RegExp(creator_name, 'i');
+            const regGenre = new RegExp(genre, 'i');
+            const regName = new RegExp(name, 'i');
 
             // lookup user first
             // use regex to find data
             const result = await SonglistsModel.aggregate([{
-                $lookup: {
-                    from: 'users',
-                    localField: 'created_by',
-                    foreignField: '_id',
-                    as: 'song_data'
+                    $lookup: {
+                        from: 'users',
+                        localField: 'created_by',
+                        foreignField: '_id',
+                        as: 'song_data'
+                    }
+                }, {
+                    $unwind: '$song_data'
+                },
+                {
+                    $match: {
+                        'name': {
+                            $regex: regName
+                        },
+                        'song_data.name': regCreator,
+                        genre: regGenre
+                    }
                 }
-            }, {
-                $unwind: '$song_data'
-            }, {
-                $match: {
-                    'song_data.name': {
-                        $regex: regCreatorName
-                    },
-                    name: name,
-                    genre: genre
-                }
-            }]);
-            // console.log(result);
+            ]);
             return result;
         };
     } catch (err) {
@@ -269,36 +273,90 @@ const getSongSort = async function (parent, {
             } = songlist_input;
             // console.log(name, genre, creator_name);
 
-            // make ternary operator to define sort used
-            // sort for name
-            const sortName = name === 'asc' ? 1 : -1;
+            // check if there is input name
+            if (name) {
+                // make ternary operator to define sort used
+                // sort for name
+                const sortName = name === 'asc' ? 1 : -1;
 
-            // sort for name
-            const sortGenre = genre === 'asc' ? 1 : -1;
+                // sort data based on sort value using sort query aggregate
+                const result = await SonglistsModel.aggregate([{
+                        $lookup: {
+                            from: 'users',
+                            localField: 'created_by',
+                            foreignField: '_id',
+                            as: 'data'
+                        }
+                    },
+                    {
+                        $sort: {
+                            name: sortName,
+                        }
+                    }
+                ]);
+                return result;
+            }
+            // check if there is input genre
+            else
+            if (genre) {
+                // make ternary operator to define sort used
+                // sort for name
+                const sortGenre = genre === 'asc' ? 1 : -1;
 
-            // sort for name
-            const sortCreatorName = creator_name === 'asc' ? 1 : -1;
-            console.log(sortName, sortGenre, sortCreatorName);
+                // sort data based on sort value using sort query aggregate
+                const result = await SonglistsModel.aggregate([{
+                        $lookup: {
+                            from: 'users',
+                            localField: 'created_by',
+                            foreignField: '_id',
+                            as: 'data'
+                        }
+                    },
+                    {
+                        $sort: {
+                            genre: sortGenre
+                        }
+                    }
+                ]);
+                return result;
+            }
+            // check if there is input creator name
+            else
+            if (creator_name) {
+                // make ternary operator to define sort used
+                // sort for name
+                const sortCreatorName = name === 'asc' ? 1 : -1;
 
-            // sort data based on sort value using sort query aggregate
-            const result = await SonglistsModel.aggregate([{
+                // sort data based on sort value using sort query aggregate
+                const result = await SonglistsModel.aggregate([{
+                        $lookup: {
+                            from: 'users',
+                            localField: 'created_by',
+                            foreignField: '_id',
+                            as: 'data'
+                        }
+                    },
+                    {
+                        $sort: {
+                            'data.creator_name': sortCreatorName,
+                        }
+                    }
+                ]);
+                return result;
+            }
+            // if there is no input
+            // output all
+            else {
+                const result = await SonglistsModel.aggregate([{
                     $lookup: {
                         from: 'users',
                         localField: 'created_by',
                         foreignField: '_id',
                         as: 'data'
                     }
-                },
-                {
-                    $sort: {
-                        name: sortName,
-                        genre: sortGenre,
-                        'data.creator_name': sortCreatorName,
-                    }
-                }
-            ]);
-            // console.log(r);
-            return result;
+                }]);
+                return result;
+            };
         };
     } catch (err) {
         throw new Error(`Error getSongSort : ${err.message}`);

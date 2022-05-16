@@ -46,8 +46,8 @@ input PlaylistFilterInput{
 }
 
 input PlaylistSortInput{
-    playlist_name: SortingList!
-    creator_name: SortingList!
+    playlist_name: SortingList
+    creator_name: SortingList
 }
 
 extend type Mutation{

@@ -273,17 +273,27 @@ const getUserSort = async function (parent, {
                 name
             } = user_input;
 
-            // make ternary operator to define what sort will be used
-            const sort = name === 'asc' ? 1 : -1;
-            // console.log(sort);
+            // check if there is name input
+            if (name) {
+                // make ternary operator to define what sort will be used
+                const sort = name === 'asc' ? 1 : -1;
+                // console.log(sort);
 
-            // sort data using query sort aggregate
-            const result = await UserModel.aggregate([{
-                $sort: {
-                    name: sort
-                }
-            }]);
-            return result;
+                // sort data using query sort aggregate
+                const result = await UserModel.aggregate([{
+                    $sort: {
+                        name: sort
+                    }
+                }]);
+                return result;
+            }
+            // if no input
+            // will output all without sorting
+            else {
+                const result = await UserModel.find();
+                return result;
+            }
+
         };
     } catch (err) {
         throw new Error(`Error sort data ${err.message}`);

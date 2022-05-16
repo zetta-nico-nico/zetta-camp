@@ -370,33 +370,65 @@ const getPlaylistSort = async function (parent, {
                 creator_name
             } = playlist_input;
 
-            // convert input into asc or desc mongo
-            // convert playlist name
-            const sortPlaylistName = playlist_name === 'asc' ? 1 : -1;
+            // check if there is playlist name input
+            if (playlist_name) {
+                // convert playlist name
+                const sortPlaylistName = playlist_name === 'asc' ? 1 : -1;
 
-            // convert creator name
-            const sortCreatorName = creator_name === 'asc' ? 1 : -1;
+                // lookup data to get creator name
+                // sort data with playlist name and creator name
+                const result = await PlaylistModel.aggregate([{
+                        $lookup: {
+                            from: 'users',
+                            localField: 'created_by',
+                            foreignField: '_id',
+                            as: 'user_data'
+                        }
+                    },
+                    {
+                        $sort: {
+                            playlist_name: sortPlaylistName,
+                        }
+                    }
+                ]);
+                return result;
+            } else
+            if (creator_name) {
+                // convert creator name
+                const sortCreatorName = creator_name === 'asc' ? 1 : -1;
 
-            // console.log(sortPlaylistName, sortCreatorName);
 
-            // lookup data to get creator name
-            // sort data with playlist name and creator name
-            const result = await PlaylistModel.aggregate([{
+                // lookup data to get creator name
+                // sort data with playlist name and creator name
+                const result = await PlaylistModel.aggregate([{
+                        $lookup: {
+                            from: 'users',
+                            localField: 'created_by',
+                            foreignField: '_id',
+                            as: 'user_data'
+                        }
+                    },
+                    {
+                        $sort: {
+                            'user_data.name': sortCreatorName
+                        }
+                    }
+                ]);
+                return result;
+            }
+            // if there is no input
+            // output all
+            else {
+                const result = await PlaylistModel.aggregate([{
                     $lookup: {
                         from: 'users',
                         localField: 'created_by',
                         foreignField: '_id',
                         as: 'user_data'
                     }
-                },
-                {
-                    $sort: {
-                        playlist_name: sortPlaylistName,
-                        'user_data.name': sortCreatorName
-                    }
-                }
-            ]);
-            return result;
+                }]);
+                return result;
+            };
         };
     } catch (err) {
         throw new Error(`Error getting sort playlist : ${err.message}`);

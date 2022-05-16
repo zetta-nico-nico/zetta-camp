@@ -62,7 +62,7 @@ input SongListFilterInput{
 input SongListSortInput{
     name: SortingList
     genre: SortingList
-    creator_name: SortingList!
+    creator_name: SortingList
 }
 
 extend type Mutation{
