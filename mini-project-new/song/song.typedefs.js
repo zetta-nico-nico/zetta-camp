@@ -42,6 +42,8 @@ input SongListInput{
 input SongListEditInput{
     song_id: ID
     name: String
+    genre: String
+    duration: Int
 }
 
 input SongListDeleteInput{

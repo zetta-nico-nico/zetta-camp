@@ -62,9 +62,11 @@ const updateSong = async function (parent, {
             // destruct song input
             const {
                 song_id,
-                name
+                name,
+                genre,
+                duration
             } = songlist_input;
-            // console.log(song_id, name);
+            // console.log(songlist_input);
             // console.log(context.user);
 
             // store id from context
@@ -72,7 +74,7 @@ const updateSong = async function (parent, {
             // check if song created by user who login
             const checkUser = await SonglistsModel.find({
                 _id: song_id,
-                created_by: userId
+                created_by: userId,
             });
             // console.log(checkUser);
 
@@ -82,7 +84,9 @@ const updateSong = async function (parent, {
             } else {
                 // search data using findbyid method
                 const result = await SonglistsModel.findByIdAndUpdate(song_id, {
-                    name: name
+                    name: name,
+                    genre: genre,
+                    duration: duration
                 }, {
                     new: true
                 });
@@ -90,7 +94,7 @@ const updateSong = async function (parent, {
             };
             // return result;
 
-        }
+        };
     } catch (er) {
         throw new Error(`Error updateSong : ${er.message}`);
     };
@@ -210,7 +214,7 @@ const getSongFilter = async function (parent, {
     songlist_input
 }) {
     try {
-        // check if there is an input or not
+        // // check if there is an input or not
         if (!songlist_input) {
             throw new Error('Please input data first');
         } else {
