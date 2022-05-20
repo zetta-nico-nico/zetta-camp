@@ -387,8 +387,8 @@ const getSongSort = async function (parent, {
             if (creator_name) {
                 // make ternary operator to define sort used
                 // sort for name
-                const sortCreatorName = name === 'asc' ? 1 : -1;
-
+                const sortCreatorName = creator_name === 'asc' ? 1 : -1;
+                // console.log(sortCreatorName);
                 // sort data based on sort value using sort query aggregate
                 const result = await SonglistsModel.aggregate([{
                         $lookup: {
@@ -400,10 +400,11 @@ const getSongSort = async function (parent, {
                     },
                     {
                         $sort: {
-                            'data.creator_name': sortCreatorName,
+                            'data.name': sortCreatorName,
                         }
                     }
                 ]);
+                // console.log(result);
                 return result;
             }
             // if there is no input
